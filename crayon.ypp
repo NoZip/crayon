@@ -1,0 +1,57 @@
+%{
+#include "point.h"
+#include "path.h"
+#include "command.h"
+%}
+
+
+// Types definitions
+
+%union {
+	double real;
+	Point point;
+	Path path;
+}
+
+%token <real> REAL
+%type <point> point
+%type <path> path
+
+
+// Operators and separators
+
+%token RPAR LPAR
+%token PLUS MINUS MUL DIV
+%token COMMA DOUBLE_POINT
+%token PATH_SEPARATOR CYCLE
+%token DRAW_COMMAND FILL_COMMAND
+%token NEWLINE
+
+%%
+
+/*
+SERVICE MESSAGE:
+C'est juste un premier jet, les gramaire ne sont pas forcement bonnes.
+Surtout celle des chemins.
+ */
+
+image : image NEWLINE instruction
+| instruction
+;
+
+instruction : command
+;
+
+point : RPAR REAL COMMA REAL LPAR {/*cartesians coordinates*/}
+| RPAR REAL DOUBLE_POINT LPAR {/*polar coordinates*/}
+;
+
+path : path PATH_SEPARATOR point {/*add a point*/}
+| path PATH_SEPARATOR PLUS point {/*add a relative point*/}
+| path PATH_SEPARATOR CYCLE {/*add a cycle*/}
+| point
+;
+
+command : DRAW_COMMAND path {/*draw a path*/}
+| FILL_COMMAND path {/*fill a path*/}
+;
