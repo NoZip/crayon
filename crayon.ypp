@@ -8,14 +8,17 @@
 // Types definitions
 
 %union {
-	double real;
+	float real;
 	Point point;
 	Path path;
 }
 
+
 %token <real> REAL
+/*
 %type <point> point
 %type <path> path
+*/
 
 
 // Operators and separators
@@ -35,7 +38,7 @@ C'est juste un premier jet, les gramaire ne sont pas forcement bonnes.
 Surtout celle des chemins.
  */
 
-image : image NEWLINE instruction
+flow : flow NEWLINE instruction
 | instruction
 ;
 
@@ -49,9 +52,27 @@ point : RPAR REAL COMMA REAL LPAR {/*cartesians coordinates*/}
 path : path PATH_SEPARATOR point {/*add a point*/}
 | path PATH_SEPARATOR PLUS point {/*add a relative point*/}
 | path PATH_SEPARATOR CYCLE {/*add a cycle*/}
-| point
+| point PATH_SEPARATOR point
+| point PATH_SEPARATOR PLUS point
+| point PATH_SEPARATOR CYCLE
 ;
 
 command : DRAW_COMMAND path {/*draw a path*/}
 | FILL_COMMAND path {/*fill a path*/}
 ;
+
+/*
+variable: NAME EQ point
+| NAME EQ path
+| NAME EQ image
+;
+ */
+
+/*
+image: IMG_START flow IMG_END
+;
+ */
+
+/*
+rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
+ */
