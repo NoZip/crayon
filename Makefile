@@ -1,6 +1,8 @@
 
+INCLUDES=-I/usr/include/cairo/
+
 crayon: crayon.tab.o crayon.flex.o point.o path.o command.o
-	g++ -o $@ $^ -lfl -lm
+	g++ -o $@ $^ -lcairo -lfl -lm
 
 crayon.yy.cpp: crayon.lex crayon.tab.hpp
 	flex -o $@ $<
@@ -8,8 +10,8 @@ crayon.yy.cpp: crayon.lex crayon.tab.hpp
 crayon.tab.cpp: crayon.ypp
 	bison -v -d $<
 
-%.o: %.cpp %.h
-	g++ -c -o $@ $<
+%.o: %.cpp
+	g++ -std=c++0x -c -o $@ ${INCLUDES} $<
 
 clean:
 	rm -f *.o *.yy.cpp *.tab.cpp *.tab.hpp *.output
