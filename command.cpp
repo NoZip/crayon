@@ -28,6 +28,10 @@ Command::Command(CommandName name, Path p) {
     m_path = p;
 }
 
+Path Command::get_path() {
+    return m_path;
+}
+
 /**
  * Calls the command.
  */

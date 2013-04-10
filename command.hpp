@@ -22,6 +22,9 @@ public:
     static void close_cairo();
 
     Command(CommandName name, Path p);
+
+    Path get_path();
+
     void operator()();
 };
 
