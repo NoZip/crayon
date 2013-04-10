@@ -14,13 +14,24 @@ cairo_t *cairo = NULL;
 void Command::init_cairo(cairo_format_t format, size_t width, size_t height) {
     cairo_surface = cairo_image_surface_create(format, width, height);
     cairo = cairo_create(cairo_surface);
+    cairo_set_line_width(cairo, 0.1);
+    cairo_set_source_rgb(cairo, 0, 0, 0);
 }
 
 /**
  * Free cairo context.
  */
 void Command::close_cairo() {
+    cairo_destroy(cairo);
+    cairo_surface_destroy(cairo_surface);
+}
 
+/**
+ * Write the cairo drawing in a PNG file.
+ * @param filename The filename of the PNG file.
+ */
+void Command::write_png_file(const char *filename) {
+    cairo_surface_write_to_png(cairo_surface, filename);
 }
 
 Command::Command(CommandName name, Path p) {
