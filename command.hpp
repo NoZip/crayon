@@ -10,7 +10,7 @@
 enum CommandName {
     DRAW,
     FILL
-}
+};
 
 class Command {
 protected:
@@ -27,7 +27,7 @@ public:
 
     Path get_path();
 
-    void operator()();
+    void execute();
 };
 
 #endif

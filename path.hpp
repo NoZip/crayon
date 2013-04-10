@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class Chemin : public list<Point>{
+class Path : public list<Point>{
  public:
   void append(const Point &p); //appel push back
   void append_relative(const Point &p); //appel push back en l'additionnant avec le dernier
-  void append_cycle(const Point &p); //copier le premier element a la fin
+  void append_cycle(); //copier le premier element a la fin
  protected:
   
 };

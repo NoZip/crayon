@@ -1,7 +1,13 @@
 %{
+#include <string>
+
 #include "point.hpp"
 #include "path.hpp"
 #include "command.hpp"
+
+void yyerror(const char* error);
+int yylex();
+void clear_stack();
 %}
 
 
@@ -9,20 +15,20 @@
 
 %union {
 	float real;
-	Point point_t;
-	Path path_t;
-    Command command_t;
+    char* string;
+	Point* point;
+	Path* path;
+    Command* command;
 }
 
 %token <real> REAL
+%token <string> NAME
+
 %type <real> expression
 
-// %type <command_t> command
-
-/*
-%type <point_t> point
-%type <path_t> path
-*/
+%type <command> command
+%type <point> point
+%type <path> path
 
 
 // Operators and separators
@@ -46,11 +52,8 @@ C'est juste un premier jet, les grammaire ne sont pas forcement bonnes.
 Surtout celle des chemins.
  */
 
-flow : flow NEWLINE instruction
-| instruction
-;
-
-instruction : command
+flow : command NEWLINE flow {$1->execute(); delete $1;}
+| command
 ;
 
 // Computes mathematical expressions
@@ -62,25 +65,25 @@ expression : expression PLUS expression {$$ = $1 + $3;}
 | REAL {$$ = $1;}
 ;
 
-point : RPAR expression COMMA expression LPAR {/*cartesians coordinates*/}
-| RPAR expression DOUBLE_POINT expression LPAR {/*polar coordinates*/}
+point : RPAR expression COMMA expression LPAR {Point *p = new Point($2, $4); $$ = p;}
+//| RPAR expression DOUBLE_POINT expression LPAR {/*polar coordinates*/}
 ;
 
-path : path PATH_SEPARATOR point {/*add a point*/}
-| path PATH_SEPARATOR PLUS point {/*add a relative point*/}
-| path PATH_SEPARATOR CYCLE {/*add a cycle*/}
-| point PATH_SEPARATOR point
-| point PATH_SEPARATOR PLUS point
-| point PATH_SEPARATOR CYCLE
+path : path PATH_SEPARATOR point {$1->append(*$3); $$ = $1;}
+| path PATH_SEPARATOR PLUS point {$1->append_relative(*$4); $$ = $1;}
+| path PATH_SEPARATOR CYCLE {$1->append_cycle(); $$ = $1;}
+| point PATH_SEPARATOR point {Path *c = new Path(); c->append(*$1); c->append(*$3); $$ = c;}
+| point PATH_SEPARATOR PLUS point {Path *c = new Path(); c->append(*$1); c->append_relative(*$4); $$ = c;}
+| point PATH_SEPARATOR CYCLE {Path *c = new Path(); c->append(*$1); c->append_cycle(); $$ = c;}
 ;
 
 command : DRAW_COMMAND path {
-	// Command c(DRAW, $2);
-	// $$ = c;
+	Command *c = new Command(DRAW, *$2);
+	$$ = c;
 }
 | FILL_COMMAND path {
-	// Command c(FILL, $2);
-	// $$ = c;
+	Command *c = new Command(FILL, *$2);
+	$$ = c;
 }
 ;
 

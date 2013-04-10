@@ -46,7 +46,7 @@ Path Command::get_path() {
 /**
  * Calls the command.
  */
-void Command::operator()() {
+void Command::execute() {
     assert(cairo && cairo_surface);
 
     // Initialization

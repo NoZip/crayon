@@ -1,7 +1,7 @@
 
 INCLUDES=-I/usr/include/cairo/
 
-crayon: crayon.tab.o crayon.flex.o point.o path.o command.o
+crayon: crayon.tab.o crayon.yy.o point.o path.o command.o
 	g++ -o $@ $^ -lcairo -lfl -lm
 
 crayon.yy.cpp: crayon.lex crayon.tab.hpp

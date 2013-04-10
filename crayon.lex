@@ -1,5 +1,11 @@
 %{
-#include "crayon.bison.hpp"
+#include <string>
+
+#include "point.hpp"
+#include "path.hpp"
+#include "command.hpp"
+
+#include "crayon.tab.hpp"
 %}
 
 %%
@@ -25,6 +31,11 @@ cycle return CYCLE;
 
 draw return DRAW_COMMAND;
 fill return FILL_COMMAND;
+
+[_a-zA-Z][_a-zA-Z0-9]+ {
+    yylval.string = yytext;
+    return NAME;
+}
 
 \n return NEWLINE;
 
