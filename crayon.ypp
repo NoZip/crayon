@@ -74,20 +74,50 @@ point : RPAR expression COMMA expression LPAR {
 }
 ;
 
-path : path PATH_SEPARATOR point {$1->append(*$3); $$ = $1;}
-| path PATH_SEPARATOR PLUS point {$1->append_relative(*$4); $$ = $1;}
-| path PATH_SEPARATOR CYCLE {$1->append_cycle(); $$ = $1;}
-| point PATH_SEPARATOR point {Path *c = new Path(); c->append(*$1); c->append(*$3); $$ = c;}
-| point PATH_SEPARATOR PLUS point {Path *c = new Path(); c->append(*$1); c->append_relative(*$4); $$ = c;}
-| point PATH_SEPARATOR CYCLE {Path *c = new Path(); c->append(*$1); c->append_cycle(); $$ = c;}
+path : path PATH_SEPARATOR point {
+	$1->append(*$3);
+	delete $3;
+	$$ = $1;
+}
+| path PATH_SEPARATOR PLUS point {
+	$1->append_relative(*$4);
+	delete $4;
+	$$ = $1;
+}
+| path PATH_SEPARATOR CYCLE {
+	$1->append_cycle();
+	$$ = $1;
+}
+| point PATH_SEPARATOR point {
+	Path *c = new Path();
+	c->append(*$1);
+	c->append(*$3);
+	delete $3;
+	$$ = c;
+}
+| point PATH_SEPARATOR PLUS point {
+	Path *c = new Path();
+	c->append(*$1);
+	c->append_relative(*$4);
+	delete $4;
+	$$ = c;
+}
+| point PATH_SEPARATOR CYCLE {
+	Path *c = new Path();
+	c->append(*$1);
+	c->append_cycle();
+	$$ = c;
+}
 ;
 
 command : DRAW_COMMAND path {
 	Command *c = new Command(DRAW, *$2);
+	delete $2;
 	$$ = c;
 }
 | FILL_COMMAND path {
 	Command *c = new Command(FILL, *$2);
+	delete $2;
 	$$ = c;
 }
 ;
