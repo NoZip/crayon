@@ -5,19 +5,24 @@
 #include "path.hpp"
 #include "command.hpp"
 
-void yyerror(const char* error);
-int yylex();
-void clear_stack();
+
+void yyerror(const char *s) {
+    fprintf(stderr, "error: %s\n", s);
+}
+
+extern "C" {
+    int yylex(void);
+}
 %}
 
 
 // Types definitions
 
 %union {
-	float real;
+    float real;
     char* string;
-	Point* point;
-	Path* path;
+    Point* point;
+    Path* path;
     Command* command;
 }
 
@@ -65,60 +70,60 @@ expression : expression PLUS expression {$$ = $1 + $3;}
 ;
 
 point : RPAR expression COMMA expression LPAR {
-	Point *p = new Point($2, $4);
-	$$ = p;
+    Point *p = new Point($2, $4);
+    $$ = p;
 }
 | RPAR expression DOUBLE_POINT expression LPAR {
-	Point *p = new Point(Point::from_polar($2, $4));
-	$$ = p;
+    Point *p = new Point(Point::from_polar($2, $4));
+    $$ = p;
 }
 ;
 
 path : path PATH_SEPARATOR point {
-	$1->append(*$3);
-	delete $3;
-	$$ = $1;
+    $1->append(*$3);
+    delete $3;
+    $$ = $1;
 }
 | path PATH_SEPARATOR PLUS point {
-	$1->append_relative(*$4);
-	delete $4;
-	$$ = $1;
+    $1->append_relative(*$4);
+    delete $4;
+    $$ = $1;
 }
 | path PATH_SEPARATOR CYCLE {
-	$1->append_cycle();
-	$$ = $1;
+    $1->append_cycle();
+    $$ = $1;
 }
 | point PATH_SEPARATOR point {
-	Path *c = new Path();
-	c->append(*$1);
-	c->append(*$3);
-	delete $3;
-	$$ = c;
+    Path *c = new Path();
+    c->append(*$1);
+    c->append(*$3);
+    delete $3;
+    $$ = c;
 }
 | point PATH_SEPARATOR PLUS point {
-	Path *c = new Path();
-	c->append(*$1);
-	c->append_relative(*$4);
-	delete $4;
-	$$ = c;
+    Path *c = new Path();
+    c->append(*$1);
+    c->append_relative(*$4);
+    delete $4;
+    $$ = c;
 }
 | point PATH_SEPARATOR CYCLE {
-	Path *c = new Path();
-	c->append(*$1);
-	c->append_cycle();
-	$$ = c;
+    Path *c = new Path();
+    c->append(*$1);
+    c->append_cycle();
+    $$ = c;
 }
 ;
 
 command : DRAW_COMMAND path {
-	Command *c = new Command(DRAW, *$2);
-	delete $2;
-	$$ = c;
+    Command *c = new Command(DRAW, *$2);
+    delete $2;
+    $$ = c;
 }
 | FILL_COMMAND path {
-	Command *c = new Command(FILL, *$2);
-	delete $2;
-	$$ = c;
+    Command *c = new Command(FILL, *$2);
+    delete $2;
+    $$ = c;
 }
 ;
 

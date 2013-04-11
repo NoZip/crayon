@@ -5,6 +5,10 @@
 #include "path.hpp"
 #include "command.hpp"
 
+extern "C" {
+    int yylex(void);
+}
+
 #include "crayon.tab.hpp"
 %}
 
