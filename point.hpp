@@ -1,21 +1,23 @@
 #ifndef POINT
 #define POINT
 
-class Point{
+class Point {
  public:
+  static Point from_polar(float theta, float r);
+
   Point();
   Point(float x, float y);
-  Point(Angle theta, double r);
-  ~Point();
+
   float get_x() const;
   float get_y() const;
- private:
+  float get_theta() const;
+  float get_r() const;
+
+ protected:
   float _x;
   float _y;
-  float x_from_polar(Angle theta, double r);
-  float y_from_polar(Angle theta, double r);
 };
 
-Point operator+(Point p1, Point p2);
+// Point operator+(const Point &p1, const Point &p2);
 
 #endif

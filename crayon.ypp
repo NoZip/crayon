@@ -32,7 +32,6 @@ void clear_stack();
 
 
 // Operators and separators
-
 %token RPAR LPAR
 %token PLUS MINUS MUL DIV
 %token COMMA DOUBLE_POINT
@@ -65,8 +64,14 @@ expression : expression PLUS expression {$$ = $1 + $3;}
 | REAL {$$ = $1;}
 ;
 
-point : RPAR expression COMMA expression LPAR {Point *p = new Point($2, $4); $$ = p;}
-//| RPAR expression DOUBLE_POINT expression LPAR {/*polar coordinates*/}
+point : RPAR expression COMMA expression LPAR {
+	Point *p = new Point($2, $4);
+	$$ = p;
+}
+| RPAR expression DOUBLE_POINT expression LPAR {
+	Point *p = new Point(Point::from_polar($2, $4));
+	$$ = p;
+}
 ;
 
 path : path PATH_SEPARATOR point {$1->append(*$3); $$ = $1;}
