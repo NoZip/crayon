@@ -6,13 +6,14 @@
 #include <cairo.h>
 
 #include "path.hpp"
+#include "instruction.hpp"
 
 enum CommandName {
     DRAW,
     FILL
 };
 
-class Command {
+class Command : public Instruction {
 protected:
     CommandName m_name;
     Path m_path;
