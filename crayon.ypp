@@ -5,21 +5,16 @@
 #include "path.hpp"
 #include "command.hpp"
 
-
-void yyerror(const char *s) {
-    fprintf(stderr, "error: %s\n", s);
-}
-
-extern "C" {
-    int yylex(void);
-}
+#define YYLEX_PARAM &yylval, &yylloc
 %}
 
+%locations
 
 // Types definitions
 
 %union {
     float real;
+    bool boolean;
     char* string;
     Point* point;
     Path* path;
@@ -30,6 +25,7 @@ extern "C" {
 %token <string> NAME
 
 %type <real> expression
+//%type <boolean> inequation
 
 %type <command> command
 %type <point> point
@@ -37,9 +33,11 @@ extern "C" {
 
 
 // Operators and separators
+%token SEMICOLON
 %token RPAR LPAR
 %token PLUS MINUS MUL DIV
-%token COMMA DOUBLE_POINT
+%token EQUAL NEQUAL GT GTE LT LTE
+%token COMMA DOUBLE_DOT
 %token PATH_SEPARATOR CYCLE
 %token DRAW_COMMAND FILL_COMMAND
 %token NEWLINE
@@ -48,16 +46,22 @@ extern "C" {
 %left MUL DIV
 %left UNARY
 
+%{
+#define yyerror(Msg) _yyerror(&yylloc, Msg)
+
+void _yyerror(YYLTYPE *yylloc, const char *s) {
+    fprintf(stderr, "ERROR %d:%d %s\n", yylloc->first_line, yylloc->first_column, s);
+}
+
+extern "C" {
+    int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param);
+}
+%}
+
 %%
 
-/*
-SERVICE MESSAGE:
-C'est juste un premier jet, les grammaire ne sont pas forcement bonnes.
-Surtout celle des chemins.
- */
-
-flow : command NEWLINE flow {$1->execute(); delete $1;}
-| command
+flow : command flow {$1->execute(); delete $1;}
+| command {$1->execute(); delete $1;}
 ;
 
 // Computes mathematical expressions
@@ -69,11 +73,21 @@ expression : expression PLUS expression {$$ = $1 + $3;}
 | REAL {$$ = $1;}
 ;
 
+/*
+inequation : expression EQUAL expression {$$ = ($1 == $3);}
+| expression NEQUAL expression {$$ = ($1 != $3);}
+| expression GT expression {$$ = ($1 > $3);}
+| expression GTE expression {$$ = ($1 >= $3);}
+| expression LT expression {$$ = ($1 < $3);}
+| expression LTE expression {$$ = ($1 <= $3);}
+;
+*/
+
 point : RPAR expression COMMA expression LPAR {
     Point *p = new Point($2, $4);
     $$ = p;
 }
-| RPAR expression DOUBLE_POINT expression LPAR {
+| RPAR expression DOUBLE_DOT expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
 }
@@ -115,12 +129,12 @@ path : path PATH_SEPARATOR point {
 }
 ;
 
-command : DRAW_COMMAND path {
+command : DRAW_COMMAND path SEMICOLON {
     Command *c = new Command(DRAW, *$2);
     delete $2;
     $$ = c;
 }
-| FILL_COMMAND path {
+| FILL_COMMAND path SEMICOLON {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
@@ -128,7 +142,7 @@ command : DRAW_COMMAND path {
 ;
 
 /*
-variable: NAME EQ point
+variable: NAME EQ point SEMICOLON
 | NAME EQ path
 | NAME EQ image
 ;
@@ -142,3 +156,14 @@ image: IMG_START flow IMG_END
 /*
 rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
  */
+
+%%
+
+int main(int argc, char ** argv) {
+    Command::init_cairo(CAIRO_FORMAT_ARGB32, 200, 200);
+    yyparse();
+    Command::write_png_file(argv[1]);
+    Command::close_cairo();
+
+    return EXIT_SUCCESS;
+}

@@ -5,19 +5,31 @@
 #include "path.hpp"
 #include "command.hpp"
 
+#include "crayon.tab.hpp"
+
+#define YY_DECL int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param)
+
 extern "C" {
-    int yylex(void);
+    int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param);
 }
 
-#include "crayon.tab.hpp"
+int yycolumn = 1;
+
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng - 1; \
+    yycolumn += yyleng;
 %}
+
+%option yylineno
 
 %%
 
-[1-9]+(?:\.[0-9]+)?|\.[0-9]+ {
+[0-9]+(\.[0-9]+)?|\.[0-9]+ {
 	yylval.real = atof(yytext);
 	return REAL;
 }
+
+\; return SEMICOLON;
 
 \( return RPAR;
 \) return LPAR;
@@ -27,8 +39,16 @@ extern "C" {
 \* return MUL;
 \/ return DIV;
 
+
+== return EQUAL;
+!= return NEQUAL;
+\> return GT;
+\>= return GTE;
+\< return LT;
+\<= return LTE;
+
 , return COMMA;
-: return DOUBLE_POINT;
+: return DOUBLE_DOT;
 
 -- return PATH_SEPARATOR;
 cycle return CYCLE;
@@ -41,6 +61,6 @@ fill return FILL_COMMAND;
     return NAME;
 }
 
-\n return NEWLINE;
+\n yycolumn = 1;
 
 . ;

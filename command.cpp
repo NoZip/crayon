@@ -14,7 +14,7 @@ cairo_t *cairo = NULL;
 void Command::init_cairo(cairo_format_t format, size_t width, size_t height) {
     cairo_surface = cairo_image_surface_create(format, width, height);
     cairo = cairo_create(cairo_surface);
-    cairo_set_line_width(cairo, 0.1);
+    cairo_set_line_width(cairo, 1.0);
     cairo_set_source_rgb(cairo, 0, 0, 0);
 }
 
