@@ -1,12 +1,12 @@
-#include <list>
 #include "flow.hpp"
 
-using namespace std;
 
-void Flow::append(const Instruction &i){
+void Flow::append(Instruction *i) {
   this->push_back(i);
 }
 
-void Flow::append_cycle(){
-  this->push_back(front());
+void Flow::execute() {
+  for (auto it = this->begin(); it != this->end(); ++it) {
+    (*it)->execute();
+  }
 }
