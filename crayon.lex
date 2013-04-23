@@ -3,7 +3,11 @@
 
 #include "point.hpp"
 #include "path.hpp"
+
+#include "instruction.hpp"
 #include "command.hpp"
+
+#include "flow.hpp"
 
 #include "crayon.tab.hpp"
 

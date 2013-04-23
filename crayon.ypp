@@ -3,7 +3,10 @@
 
 #include "point.hpp"
 #include "path.hpp"
+
+#include "instruction.hpp"
 #include "command.hpp"
+#include "flow.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
 %}
@@ -18,7 +21,8 @@
     char* string;
     Point* point;
     Path* path;
-    Command* command;
+    Instruction* instruction;
+    Flow* flow;
 }
 
 %token <real> REAL
@@ -27,9 +31,12 @@
 %type <real> expression
 //%type <boolean> inequation
 
-%type <command> command
 %type <point> point
 %type <path> path
+
+%type <instruction> instruction
+%type <instruction> command
+%type <flow> flow
 
 
 // Operators and separators
@@ -60,8 +67,14 @@ extern "C" {
 
 %%
 
-flow : command flow {$1->execute(); delete $1;}
-| command {$1->execute(); delete $1;}
+image : flow {$1->execute(); delete $1;}
+;
+
+flow : flow instruction {$1->append($2);}
+| instruction {Flow *f = new Flow(); f->append($1); $$ = f;}
+;
+
+instruction : command
 ;
 
 // Computes mathematical expressions
