@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdio>
 
 #include "point.hpp"
 
@@ -35,3 +36,8 @@ float Point::get_r() const {
   return sqrt(_x * _x + _y * _y);
 }
 
+string Point::to_string() {
+  char s[32];
+  sprintf(s, "(%f, %f)", _x, _y);
+  return string(s);
+}

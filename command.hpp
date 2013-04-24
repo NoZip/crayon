@@ -15,8 +15,8 @@ enum CommandName {
 
 class Command : public Instruction {
 protected:
-    CommandName m_name;
-    Path m_path;
+    CommandName _name;
+    Path _path;
 
 public:
     static void init_cairo(cairo_format_t format, size_t width, size_t height);
@@ -28,7 +28,7 @@ public:
 
     Path get_path();
 
-    void execute();
+    void execute(const Environment &env);
 };
 
 #endif

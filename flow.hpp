@@ -7,12 +7,16 @@
 
 using std::list;
 
-class Flow : public list<Instruction*>, public Instruction {
+class Flow : public Instruction {
 public:
+  Flow();
   virtual ~Flow();
 
   void append(Instruction *i);
-  void execute();
+  void execute(const Environment &env);
+
+protected:
+  list<Instruction*> _instructions;
 };
 
 #endif

@@ -1,6 +1,9 @@
+#include <iostream>
 #include <cassert>
 
 #include "command.hpp"
+
+using namespace std;
 
 cairo_surface_t *cairo_surface = NULL;
 cairo_t *cairo = NULL;
@@ -35,30 +38,32 @@ void Command::write_png_file(const char *filename) {
 }
 
 Command::Command(CommandName name, Path p) {
-    m_name = name;
-    m_path = p;
+    _name = name;
+    _path = p;
 }
 
 Path Command::get_path() {
-    return m_path;
+    return _path;
 }
 
 /**
  * Calls the command.
  */
-void Command::execute() {
+void Command::execute(const Environment &env) {
     assert(cairo && cairo_surface);
 
+    cout << "commande " << _path.to_string() << endl;
+
     // Initialization
-    auto it = m_path.begin();
+    auto it = _path.begin();
     cairo_move_to(cairo, it->get_x(), it->get_y()); // we move to the first point
     
     // Iteration
-    for (++it; it != m_path.end(); ++it) {
+    for (++it; it != _path.end(); ++it) {
         cairo_line_to(cairo, it->get_x(), it->get_y());
     }
 
-    switch (m_name) {
+    switch (_name) {
         case DRAW:
             cairo_stroke(cairo);
             break;

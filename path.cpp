@@ -3,6 +3,17 @@
 
 using namespace std;
 
+string Path::to_string() {
+  string s;
+
+  for (auto it = begin(); it != end(); ++it) {
+    s.append(it->to_string());
+    s.append(" -- ");
+  }
+
+  return s;
+}
+
 void Path::append(const Point &p){
   this->push_back(p);
 }

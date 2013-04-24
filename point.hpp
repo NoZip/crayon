@@ -1,6 +1,10 @@
 #ifndef POINT
 #define POINT
 
+#include <string>
+
+using std::string;
+
 class Point {
  public:
   static Point from_polar(float theta, float r);
@@ -12,6 +16,8 @@ class Point {
   float get_y() const;
   float get_theta() const;
   float get_r() const;
+
+  string to_string();
 
  protected:
   float _x;

@@ -1,5 +1,5 @@
 %{
-#include <string>
+#include <cstring>
 
 #include "point.hpp"
 #include "path.hpp"
@@ -35,6 +35,8 @@ int yycolumn = 1;
 
 \; return SEMICOLON;
 
+= return EQ;
+
 \( return RPAR;
 \) return LPAR;
 
@@ -61,7 +63,7 @@ draw return DRAW_COMMAND;
 fill return FILL_COMMAND;
 
 [_a-zA-Z][_a-zA-Z0-9]+ {
-    yylval.string = yytext;
+    yylval.name = strdup(yytext);
     return NAME;
 }
 

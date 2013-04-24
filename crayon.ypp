@@ -4,11 +4,15 @@
 #include "point.hpp"
 #include "path.hpp"
 
+#include "environment.hpp"
+
 #include "instruction.hpp"
 #include "command.hpp"
 #include "flow.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
+
+using std::string;
 %}
 
 %locations
@@ -18,15 +22,15 @@
 %union {
     float real;
     bool boolean;
-    char* string;
+    char* name;
     Point* point;
     Path* path;
-    Instruction* instruction;
+    Command *command;
     Flow* flow;
 }
 
 %token <real> REAL
-%token <string> NAME
+%token <name> NAME
 
 %type <real> expression
 //%type <boolean> inequation
@@ -34,20 +38,19 @@
 %type <point> point
 %type <path> path
 
-%type <instruction> instruction
-%type <instruction> command
+%type <command> command
 %type <flow> flow
 
 
 // Operators and separators
 %token SEMICOLON
+%token EQ
 %token RPAR LPAR
 %token PLUS MINUS MUL DIV
 %token EQUAL NEQUAL GT GTE LT LTE
 %token COMMA DOUBLE_DOT
 %token PATH_SEPARATOR CYCLE
 %token DRAW_COMMAND FILL_COMMAND
-%token NEWLINE
 
 %left PLUS MINUS
 %left MUL DIV
@@ -63,18 +66,18 @@ void _yyerror(YYLTYPE *yylloc, const char *s) {
 extern "C" {
     int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param);
 }
+
+Environment *root_env = new Environment();
 %}
 
 %%
 
-image : flow {$1->execute(); delete $1;}
+image : flow {}
 ;
 
-flow : flow instruction {$1->append($2);}
-| instruction {Flow *f = new Flow(); f->append($1); $$ = f;}
-;
-
-instruction : command
+flow : command flow {$2->append($1);}
+| command {Flow *f = new Flow(); f->append($1); $$ = f;}
+| variable  flow {$$ = $2;}
 ;
 
 // Computes mathematical expressions
@@ -83,6 +86,15 @@ expression : expression PLUS expression {$$ = $1 + $3;}
 | MINUS expression %prec UNARY {$$ = -$2;}
 | expression MUL expression {$$ = $1 * $3;}
 | expression DIV expression {$$ = $1 / $3;}
+| NAME {
+    Variable v = root_env->get_variable(string($1));
+    if (v.type == SCALAR) {
+        $$ = *((float*) v.value);
+    }
+    else {
+        throw "MOTHERFUCKING ERROR!";
+    }
+  }
 | REAL {$$ = $1;}
 ;
 
@@ -104,6 +116,17 @@ point : RPAR expression COMMA expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
 }
+/*
+| NAME {
+    Variable v = root_env->get_variable(string($1));
+    if (v.type == VECTOR2D) {
+        $$ = (Point*) v.value;
+    }
+    else {
+        throw "MOTHERFUCKING ERROR!";
+    }
+  }
+*/
 ;
 
 path : path PATH_SEPARATOR point {
@@ -124,6 +147,7 @@ path : path PATH_SEPARATOR point {
     Path *c = new Path();
     c->append(*$1);
     c->append(*$3);
+    delete $1;
     delete $3;
     $$ = c;
 }
@@ -131,6 +155,7 @@ path : path PATH_SEPARATOR point {
     Path *c = new Path();
     c->append(*$1);
     c->append_relative(*$4);
+    delete $1;
     delete $4;
     $$ = c;
 }
@@ -138,28 +163,41 @@ path : path PATH_SEPARATOR point {
     Path *c = new Path();
     c->append(*$1);
     c->append_cycle();
+    delete $1;
     $$ = c;
 }
+/*
+| NAME {
+    Variable v = root_env->get_variable(string($1));
+    if (v.type == PATH) {
+        $$ = (Path*) v.value;
+    }
+    else {
+        throw "MOTHERFUCKING ERROR!";
+    }
+  }
+*/
 ;
 
 command : DRAW_COMMAND path SEMICOLON {
     Command *c = new Command(DRAW, *$2);
     delete $2;
     $$ = c;
+    c->execute(root_env);
 }
 | FILL_COMMAND path SEMICOLON {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
+    c->execute(root_env);
 }
 ;
 
-/*
-variable: NAME EQ point SEMICOLON
-| NAME EQ path
-| NAME EQ image
+variable: NAME EQ REAL SEMICOLON {root_env->set_variable(string($1), SCALAR, new float($3));}
+| NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, $3);}
+| NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, $3);}
+// | NAME EQ image SEMICOLON
 ;
- */
 
 /*
 image: IMG_START flow IMG_END
