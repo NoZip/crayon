@@ -47,6 +47,8 @@
 %token COMMA DOUBLE_DOT
 %token PATH_SEPARATOR CYCLE
 %token DRAW_COMMAND FILL_COMMAND
+%token TRANSLATE_BUILDIN
+%token ROTATE_BUILDIN
 %token NEWLINE
 
 %left PLUS MINUS
@@ -103,6 +105,12 @@ point : RPAR expression COMMA expression LPAR {
 | RPAR expression DOUBLE_DOT expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
+}
+| TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
+  $$ = new Point($3->translate(*$5));
+}
+| ROTATE_BUILDIN RPAR point COMMA point COMMA REAL LPAR {
+  $$ = new Point($3->rotate(*$5,$7));
 }
 ;
 
