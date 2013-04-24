@@ -51,6 +51,8 @@ using std::string;
 %token COMMA DOUBLE_DOT
 %token PATH_SEPARATOR CYCLE
 %token DRAW_COMMAND FILL_COMMAND
+%token TRANSLATE_BUILDIN
+%token ROTATE_BUILDIN
 
 %left PLUS MINUS
 %left MUL DIV
@@ -127,6 +129,12 @@ point : RPAR expression COMMA expression LPAR {
     }
   }
 */
+| TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
+  $$ = new Point($3->translate(*$5));
+}
+| ROTATE_BUILDIN RPAR point COMMA point COMMA REAL LPAR {
+  $$ = new Point($3->rotate(*$5,$7));
+}
 ;
 
 path : path PATH_SEPARATOR point {

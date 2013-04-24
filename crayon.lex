@@ -62,6 +62,9 @@ cycle return CYCLE;
 draw return DRAW_COMMAND;
 fill return FILL_COMMAND;
 
+translate return TRANSLATE_BUILDIN;
+rotate return ROTATE_BUILDIN;
+
 [_a-zA-Z][_a-zA-Z0-9]+ {
     yylval.name = strdup(yytext);
     return NAME;
