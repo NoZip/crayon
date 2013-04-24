@@ -32,6 +32,7 @@ using std::string;
 %token <real> REAL
 %token <name> NAME
 
+%type <real> sexpression
 %type <real> expression
 //%type <boolean> inequation
 
@@ -82,13 +83,7 @@ flow : command flow {$2->append($1);}
 | variable  flow {$$ = $2;}
 ;
 
-// Computes mathematical expressions
-expression : expression PLUS expression {$$ = $1 + $3;}
-| expression MINUS expression {$$ = $1 - $3;}
-| MINUS expression %prec UNARY {$$ = -$2;}
-| expression MUL expression {$$ = $1 * $3;}
-| expression DIV expression {$$ = $1 / $3;}
-| NAME {
+expression : NAME {
     Variable v = root_env->get_variable(string($1));
     if (v.type == SCALAR) {
         $$ = *((float*) v.value);
@@ -97,7 +92,15 @@ expression : expression PLUS expression {$$ = $1 + $3;}
         throw "MOTHERFUCKING ERROR!";
     }
   }
-| REAL {$$ = $1;}
+| sexpression
+
+// Computes mathematical expressions
+sexpression : expression PLUS expression {$$ = $1 + $3;}
+| expression MINUS expression {$$ = $1 - $3;}
+| MINUS expression %prec UNARY {$$ = -$2;}
+| expression MUL expression {$$ = $1 * $3;}
+| expression DIV expression {$$ = $1 / $3;}
+| REAL
 ;
 
 /*
@@ -118,7 +121,6 @@ point : RPAR expression COMMA expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
 }
-/*
 | NAME {
     Variable v = root_env->get_variable(string($1));
     if (v.type == VECTOR2D) {
@@ -128,7 +130,6 @@ point : RPAR expression COMMA expression LPAR {
         throw "MOTHERFUCKING ERROR!";
     }
   }
-*/
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
   $$ = new Point($3->translate(*$5));
 }
@@ -174,22 +175,23 @@ path : path PATH_SEPARATOR point {
     delete $1;
     $$ = c;
 }
-/*
-| NAME {
-    Variable v = root_env->get_variable(string($1));
-    if (v.type == PATH) {
-        $$ = (Path*) v.value;
-    }
-    else {
-        throw "MOTHERFUCKING ERROR!";
-    }
-  }
-*/
 ;
 
 command : DRAW_COMMAND path SEMICOLON {
     Command *c = new Command(DRAW, *$2);
     delete $2;
+    $$ = c;
+    c->execute(root_env);
+}
+| DRAW_COMMAND NAME SEMICOLON {
+    Variable v = root_env->get_variable(string($2));
+
+    if (v.type != PATH)
+        throw "MOTHERFUCKING ERROR!";
+    
+    Path p = *((Path*) v.value);
+
+    Command *c = new Command(DRAW, p);
     $$ = c;
     c->execute(root_env);
 }
@@ -199,11 +201,23 @@ command : DRAW_COMMAND path SEMICOLON {
     $$ = c;
     c->execute(root_env);
 }
+| FILL_COMMAND NAME SEMICOLON {
+    Variable v = root_env->get_variable(string($2));
+
+    if (v.type != PATH)
+        throw "MOTHERFUCKING ERROR!";
+    
+    Path p = *((Path*) v.value);
+
+    Command *c = new Command(FILL, p);
+    $$ = c;
+    c->execute(root_env);
+}
 ;
 
-variable: NAME EQ REAL SEMICOLON {root_env->set_variable(string($1), SCALAR, new float($3));}
-| NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, $3);}
-| NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, $3);}
+variable: NAME EQ sexpression SEMICOLON {root_env->set_variable(string($1), SCALAR, new float($3));}
+| NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
+| NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}
 // | NAME EQ image SEMICOLON
 ;
 
