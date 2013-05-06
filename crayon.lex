@@ -4,6 +4,7 @@
 #include "point.hpp"
 #include "path.hpp"
 
+#include "expression.hpp"
 #include "instruction.hpp"
 #include "command.hpp"
 

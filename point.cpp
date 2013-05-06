@@ -21,6 +21,30 @@ Point::Point(float x, float y){
   _y =y;
 }
 
+string Point::to_tmp_variable() {
+  string s;
+
+  s += "Point(" + to_string(_x) + "," + to_string(_y) + ")";
+
+  return s;
+}
+
+string Point::to_variable_affectation(string name) {
+  string s;
+
+  // s.append("Point ");
+  // s.append(name);
+  // s.append("(");
+  // s.append(to_string(_x));
+  // s.append(",");
+  // s.append(to_string(_y));
+  // s.append(");");
+
+  s += "Point " + name + "(" + to_string(_x) + "," + to_string(_y) + ");";
+
+  return s;
+}
+
 float Point::get_x() const {
   return _x;
 }
@@ -43,12 +67,6 @@ float Point::get_theta() const {
 
 float Point::get_r() const {
   return sqrt(_x * _x + _y * _y);
-}
-
-string Point::to_string() {
-  char s[32];
-  sprintf(s, "(%f, %f)", _x, _y);
-  return string(s);
 }
 
 Point Point::translate(Point v) {  

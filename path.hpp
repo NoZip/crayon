@@ -9,9 +9,12 @@
 using std::list;
 using std::string;
 
-class Path : public list<Point>{
+class Path : public list<Point> {
  public:
-  string to_string();
+  // Path(std::initializing_list<Point> l);
+
+  string to_tmp_variable();
+  string to_variable_affectation(string name);
 
   void append(const Point &p); //appel push back
   void append_relative(const Point &p); //appel push back en l'additionnant avec le dernier

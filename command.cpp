@@ -52,7 +52,7 @@ Path Command::get_path() {
 void Command::execute(const Environment &env) {
     assert(cairo && cairo_surface);
 
-    cout << "commande " << _path.to_string() << endl;
+    cout << "commande " << _path.to_tmp_variable() << endl;
 
     // Initialization
     auto it = _path.begin();

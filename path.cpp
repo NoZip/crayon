@@ -3,13 +3,34 @@
 
 using namespace std;
 
-string Path::to_string() {
+string Path::to_tmp_variable() {
   string s;
 
+  s.append("{");
+
   for (auto it = begin(); it != end(); ++it) {
-    s.append(it->to_string());
-    s.append(" -- ");
+    if (it != begin()) {
+      s.append(",");
+    }
+    
+    s.append(it->to_tmp_variable());
   }
+
+  s.append("}");
+
+  return s;
+}
+
+string Path::to_variable_affectation(string name) {
+  string s;
+
+  // s.append("Path ");
+  // s.append(name);
+  // s.append(" = ");
+  // s.append(to_tmp_variable());
+  // s.append(";");
+
+  s += "Path " + name + " = " + to_tmp_variable() + ";";
 
   return s;
 }

@@ -32,11 +32,11 @@ void print_map(const map<string, Variable> &m) {
       break;
 
       case VECTOR2D:
-      std::cout << "Value=" << ((Point*) it->second.value)->to_string() << std::endl;
+      std::cout << "Value=" << ((Point*) it->second.value)->to_tmp_variable() << std::endl;
       break;
 
       case PATH:
-      std::cout << "Value=" << ((Path*) it->second.value)->to_string() << std::endl;
+      std::cout << "Value=" << ((Path*) it->second.value)->to_tmp_variable() << std::endl;
       break;
     }
 

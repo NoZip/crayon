@@ -11,6 +11,9 @@ class Point {
 
   Point();
   Point(float x, float y);
+
+  string to_tmp_variable();
+  string to_variable_affectation(string name);
   
   Point translate(Point v);
   Point rotate(Point c, float angle);
@@ -18,8 +21,6 @@ class Point {
   float get_y() const;
   float get_theta() const;
   float get_r() const;
-
-  string to_string();
 
  protected:
   float _x;
