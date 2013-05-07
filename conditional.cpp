@@ -1,5 +1,6 @@
-#include "instruction.hpp"
+#include "conditional.hpp"
 #include "inequation.hpp"
+#include "flow.hpp"
 
 Conditional::Conditional(Inequation *condition, Flow *consequent, Flow *alternative = NULL){
   _condition = condition;
@@ -7,23 +8,17 @@ Conditional::Conditional(Inequation *condition, Flow *consequent, Flow *alternat
   _alternative = alternative;
 }
 
-// Conditional::Conditional(Inequation *condition, Flow* consequent){
-//   _condition = condition;
-//   _consequent = consequent;
-//   _alternative = NULL;
-// }
-
 Conditional::~Conditional(){
 
 }
 
-void Conditional::execute() {
+void Conditional::execute(Environment &env) {
   if(_condition->calculate()){
-    _consequent->execute();
+    _consequent->execute(env);
 
   }else{
     if(_alternative)
-      _alternative->execute();
+      _alternative->execute(env);
   }
 }
   
