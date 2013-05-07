@@ -13,7 +13,8 @@ public:
   virtual ~Flow();
 
   void append(Instruction *i);
-  void execute(const Environment &env);
+  
+  virtual void execute(Environment &env);
 
 protected:
   list<Instruction*> _instructions;

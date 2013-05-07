@@ -25,10 +25,11 @@ public:
     static void write_png_file(const char *filename);
 
     Command(CommandName name, Path p);
+    virtual ~Command();
 
     Path get_path();
 
-    void execute(const Environment &env);
+    virtual void execute(Environment &env);
 };
 
 #endif
