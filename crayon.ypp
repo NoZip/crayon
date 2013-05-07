@@ -37,6 +37,7 @@ using std::string;
     VariableAffectation* variable;
     Flow* flow;
     Conditional* conditional;
+    While* while;
 }
 
 %token <real> REAL
@@ -71,6 +72,7 @@ using std::string;
 %token RBRACE
 %token CONDITIONALIF
 %token CONDITIONALELSE
+%token WHILE
 %left PLUS MINUS
 %left MUL DIV
 %left UNARY
@@ -249,6 +251,11 @@ rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
  */
 
 conditional : CONDITIONALIF RPAR inequation LPAR LBRACE flow RBRACE CONDITIONALELSE LBRACE flow RBRACE
+;
+
+while : WHILE RPAR inequeation LPAR LBRACE flow RBRACE 
+;
+
 %%
 
 int main(int argc, char ** argv) {
