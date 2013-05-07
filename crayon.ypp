@@ -12,6 +12,7 @@
 #include "command.hpp"
 #include "variable_affectation.hpp"
 #include "flow.hpp"
+#include "conditional.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
 
@@ -33,6 +34,7 @@ using std::string;
     Command *command;
     VariableAffectation* variable;
     Flow* flow;
+    Conditional* conditional;
 }
 
 %token <real> REAL
@@ -40,7 +42,7 @@ using std::string;
 
 %type <expression> sexpression
 %type <expression> expression
-//%type <boolean> inequation
+%type <inequation> inequation
 
 %type <point> point
 %type <path> path
@@ -48,6 +50,7 @@ using std::string;
 %type <command> command
 %type <variable> variable
 %type <flow> flow
+//%type <conditional> conditional
 
 
 // Operators and separators
@@ -62,7 +65,10 @@ using std::string;
 %token DRAW_COMMAND FILL_COMMAND
 %token TRANSLATE_BUILDIN
 %token ROTATE_BUILDIN
-
+%token LBRACE
+%token RBRACE
+%token CONDITIONALIF
+%token CONDITIONALELSE
 %left PLUS MINUS
 %left MUL DIV
 %left UNARY
@@ -246,6 +252,7 @@ image: IMG_START flow IMG_END
 rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
  */
 
+conditional : CONDITIONALIF RPAR inequation LPAR LBRACE flow RBRACE CONDITIONALELSE LBRACE flow RBRACE
 %%
 
 int main(int argc, char ** argv) {
