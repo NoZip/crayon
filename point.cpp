@@ -18,7 +18,7 @@ Point::Point(){
 
 Point::Point(float x, float y){
   _x = x;
-  _y =y;
+  _y = y;
 }
 
 string Point::to_tmp_variable() {
