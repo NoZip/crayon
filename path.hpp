@@ -13,8 +13,8 @@ class Path : public list<Point> {
  public:
   // Path(std::initializing_list<Point> l);
 
-  string to_tmp_variable();
-  string to_variable_affectation(string name);
+  string to_tmp_variable() const;
+  string to_variable_affectation(string name) const;
 
   void append(const Point &p); //appel push back
   void append_relative(const Point &p); //appel push back en l'additionnant avec le dernier

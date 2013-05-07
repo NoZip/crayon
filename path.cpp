@@ -3,7 +3,7 @@
 
 using namespace std;
 
-string Path::to_tmp_variable() {
+string Path::to_tmp_variable() const {
   string s;
 
   s.append("{");
@@ -21,7 +21,7 @@ string Path::to_tmp_variable() {
   return s;
 }
 
-string Path::to_variable_affectation(string name) {
+string Path::to_variable_affectation(string name) const {
   string s;
 
   // s.append("Path ");
@@ -40,8 +40,9 @@ void Path::append(const Point &p){
 }
 
 void Path::append_relative(const Point &p){
-  Point tmp(back().get_x() + p.get_x(), back().get_y() + p.get_y()); //on cree un nouveau point en additionnant celui de la fin de la liste et celui en parametre
-  this->push_back(tmp);
+  Expression *tmp_x = new BinaryExpression(EXPR_PLUS, back().get_x_expression(), p.get_x_expression());
+  Expression *tmp_y = new BinaryExpression(EXPR_PLUS, back().get_y_expression(), p.get_y_expression());
+  this->push_back(Point(tmp_x, tmp_y));
 }
 
 void Path::append_cycle(){

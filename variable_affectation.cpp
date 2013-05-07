@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "variable_affectation.hpp"
 
 using namespace std;
@@ -9,6 +11,10 @@ VariableAffectation::VariableAffectation(const string &name, VariableType type, 
 
 VariableAffectation::~VariableAffectation() {
 
+}
+
+void VariableAffectation::print() {
+    std::cout << "variable " << std::endl;
 }
 
 void VariableAffectation::execute(Environment &env) {

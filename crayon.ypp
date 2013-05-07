@@ -1,6 +1,8 @@
 %{
 #include <iostream>
 
+#include "error.hpp"
+
 #include "point.hpp"
 #include "path.hpp"
 
@@ -83,12 +85,13 @@ Environment *root_env = new Environment();
 
 %%
 
-image : flow {}
+image : flow {$1->execute(*root_env);}
 ;
 
-flow : command flow {$2->append($1);}
+flow : flow command {$$ = $1; $$->append($2);}
 | command {Flow *f = new Flow(); f->append($1); $$ = f;}
-| variable  flow {$$ = $2;}
+| flow variable {$$ = $1; $$->append($2);}
+| variable {Flow *f = new Flow(); f->append($1); $$ = f;}
 ;
 
 expression : NAME {$$ = new VariableExpression(root_env, string($1));}
@@ -120,9 +123,8 @@ inequation : expression EQUAL expression {$$ = new BinaryInequation(INEQ_EQUAL, 
 */
 
 point : RPAR expression COMMA expression LPAR {
-    Point *p = new Point($2->calculate(), $4->calculate());
+    Point *p = new Point($2, $4);
     $$ = p;
-    printf("%s\n", $$->to_tmp_variable().c_str());
 }
 /*
 | RPAR expression DOUBLE_DOT expression LPAR {
@@ -135,7 +137,7 @@ point : RPAR expression COMMA expression LPAR {
         $$ = (Point*) v.value;
     }
     else {
-        throw "MOTHERFUCKING ERROR!";
+        throw VariableError(string("La variable n'est pas un point\n");
     }
   }
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
@@ -190,7 +192,7 @@ command : DRAW_COMMAND path SEMICOLON {
     Command *c = new Command(DRAW, *$2);
     delete $2;
     $$ = c;
-    c->execute(*root_env);
+    // c->execute(*root_env);
 }
 | DRAW_COMMAND NAME SEMICOLON {
     Variable v = root_env->get_variable(string($2));
@@ -202,13 +204,13 @@ command : DRAW_COMMAND path SEMICOLON {
 
     Command *c = new Command(DRAW, p);
     $$ = c;
-    c->execute(*root_env);
+    // c->execute(*root_env);
 }
 | FILL_COMMAND path SEMICOLON {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
-    c->execute(*root_env);
+    // c->execute(*root_env);
 }
 | FILL_COMMAND NAME SEMICOLON {
     Variable v = root_env->get_variable(string($2));
@@ -220,14 +222,12 @@ command : DRAW_COMMAND path SEMICOLON {
 
     Command *c = new Command(FILL, p);
     $$ = c;
-    c->execute(*root_env);
+    // c->execute(*root_env);
 }
 ;
 
 variable: NAME EQ expression SEMICOLON {
 $$ = new VariableAffectation(string($1), SCALAR, $3);
-$$->execute(*root_env);
-printf("template calculus: %f\n", $3->calculate());
 }
 // | NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
 // | NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}

@@ -23,11 +23,22 @@ void Flow::append(Instruction *i) {
   _instructions.push_back(i);
 }
 
+void Flow::print() {
+  cout << "print flow" << endl;
+  for (auto it = _instructions.begin(); it != _instructions.end(); ++it) {
+    Instruction *ins = *it;
+    ins->print();
+  }
+}
+
 void Flow::execute(Environment &env) {
   // for (auto it = _instructions.begin(); it != _instructions.end(); it) {
   //   Command c = *((Command*) *it);
   //   cout << "commande " << c.get_path().to_string() << endl;
   // }
+  
+  cout << _instructions.size() << endl;
+  print();
 
   for (auto it = _instructions.begin(); it != _instructions.end(); ++it) {
     (*it)->execute(env);

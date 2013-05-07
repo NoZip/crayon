@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <cassert>
 
 #include "command.hpp"
@@ -48,6 +49,24 @@ Command::~Command() {
 
 Path Command::get_path() {
     return _path;
+}
+
+void Command::print() {
+    string s;
+
+    switch(_name) {
+        case DRAW:
+            s += "draw ";
+            break;
+
+        case FILL:
+            s += "fill ";
+            break;
+    }
+
+    // s += _path.to_tmp_variable();
+
+    cout << s << endl;
 }
 
 /**

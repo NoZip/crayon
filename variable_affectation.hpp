@@ -18,6 +18,7 @@ public:
   VariableAffectation(const string &name, VariableType type, Expression *value);
   virtual ~VariableAffectation();
 
+  virtual void print();
   virtual void execute(Environment &env);
 };
 

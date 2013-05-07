@@ -13,7 +13,9 @@ public:
   virtual ~Flow();
 
   void append(Instruction *i);
-  
+
+
+  void print();
   virtual void execute(Environment &env);
 
 protected:

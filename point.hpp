@@ -3,30 +3,33 @@
 
 #include <string>
 
+#include "expression.hpp"
+
 using std::string;
 
 class Point {
  public:
-  static Point from_polar(float theta, float r);
+  // static Point from_polar(float theta, float r);
 
-  Point();
-  Point(float x, float y);
+  Point(Expression *x, Expression *y);
 
-  string to_tmp_variable();
-  string to_variable_affectation(string name);
+  string to_tmp_variable() const;
+  string to_variable_affectation(string name)const;
   
-  Point translate(Point v);
-  Point rotate(Point c, float angle);
   float get_x() const;
   float get_y() const;
   float get_theta() const;
   float get_r() const;
 
+  Expression* get_x_expression() const;
+  Expression* get_y_expression() const;
+  
+  // Point translate(Point v);
+  // Point rotate(Point c, float angle);
+
  protected:
-  float _x;
-  float _y;
-  void set_x(float a);
-  void set_y(float a);
+  Expression *_x;
+  Expression *_y;
 };
 
 // Point operator+(const Point &p1, const Point &p2);

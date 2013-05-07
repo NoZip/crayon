@@ -32,8 +32,8 @@ VariableInequation::~VariableInequation() {
 
 bool VariableInequation::calculate() {
 	Variable var = _env->get_variable(_name);
-	assert(var.type == SCALAR);
-	bool value = *((bool *) var.value);
+	assert(var.type == BOOLEAN);
+	bool value = ((Inequation *) var.value)->calculate();
 	return value;
 }
 

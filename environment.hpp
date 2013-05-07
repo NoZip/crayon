@@ -9,6 +9,7 @@ using std::map;
 
 enum VariableType {
   SCALAR,
+  BOOLEAN,
   VECTOR2D,
   PATH,
   IMAGE
@@ -28,6 +29,8 @@ public:
   Environment();
   Environment(Environment *parent);
   virtual ~Environment();
+
+  void print_map();
   
   Variable get_variable(const string &name);
   void set_variable(const string &name, VariableType type, void *value);

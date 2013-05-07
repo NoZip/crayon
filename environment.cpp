@@ -1,6 +1,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include "error.hpp"
+
 #include "environment.hpp"
 
 #include "point.hpp"
@@ -22,9 +24,9 @@ Environment::~Environment() {
   
 }
 
-void print_map(const map<string, Variable> &m) {
+void Environment::print_map() {
   std::cout << "MAP" << std::endl;
-  for (auto it = m.begin(); it != m.end(); ++it) {
+  for (auto it = _variables.begin(); it != _variables.end(); ++it) {
     std::cout << "Key=" << it->first << std::endl;
     Variable v = it->second;
     switch (v.type) {
@@ -53,14 +55,15 @@ Variable Environment::get_variable(const string &name) {
       return _parent->get_variable(name);
     }
     else {
-      print_map(_variables);
-      throw string("FUCk IT");
+      print_map();
+      throw VariableError(string("Not Defined"));
     }
   }
 }
 
 void Environment::set_variable(const string &name, VariableType type, void *value) {
-  cout << "variable " << name << " set" << endl; 
+  cout << "variable " << name << " set" << endl;
+  print_map();
   Variable v = {type, value};
   _variables[name] = v;
 }
