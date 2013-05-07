@@ -53,6 +53,9 @@ int yycolumn = 1;
 \>= return GTE;
 \< return LT;
 \<= return LTE;
+&& return AND;
+|| return OR;
+! return NOT;
 
 , return COMMA;
 : return DOUBLE_DOT;
