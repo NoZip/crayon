@@ -95,6 +95,7 @@ sexpression : expression PLUS expression {$$ = new BinaryExpression(EXPR_PLUS, $
 | expression MUL expression {$$ = new BinaryExpression(EXPR_MUL, $1, $3);}
 | expression DIV expression {$$ = new BinaryExpression(EXPR_DIV, $1, $3);}
 | REAL {$$ = new ConstantExpression($1);}
+| RPAR expression LPAR {$$ = $2;}
 ;
 
 /*
