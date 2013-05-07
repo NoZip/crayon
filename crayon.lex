@@ -5,6 +5,7 @@
 #include "path.hpp"
 
 #include "expression.hpp"
+#include "inequation.hpp"
 #include "instruction.hpp"
 #include "command.hpp"
 
@@ -54,7 +55,7 @@ int yycolumn = 1;
 \< return LT;
 \<= return LTE;
 && return AND;
-|| return OR;
+\|\| return OR;
 ! return NOT;
 
 , return COMMA;
