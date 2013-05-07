@@ -75,6 +75,8 @@ fill return FILL_COMMAND;
 
 translate return TRANSLATE_BUILDIN;
 rotate return ROTATE_BUILDIN;
+if return CONDITIONALIF;
+else return CONDITIONALELSE;
 
 [_a-zA-Z][_a-zA-Z0-9]+ {
     yylval.name = strdup(yytext);
