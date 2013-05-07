@@ -6,12 +6,6 @@ Conditional::Conditional(Inequation *condition, Flow *consequent, Flow *alternat
   _alternative = alternative;
 }
 
-// Conditional::Conditional(Inequation *condition, Flow* consequent){
-//   _condition = condition;
-//   _consequent = consequent;
-//   _alternative = NULL;
-// }
-
 Conditional::~Conditional(){
 
 }

@@ -6,12 +6,12 @@
 #include "flow.hpp"
 
 class Conditional : public Instruction {
-protected :
+protected:
   Inequation *_condition;
   Flow *_consequent;
   Flow *_alternative;
 
-public :
+public: 
   Conditional(Inequation *condition, Flow *consequent, Flow *alternative);
   virtual ~Conditional();
   void execute(Environment &env);
