@@ -56,8 +56,6 @@ Path Command::get_path() {
 void Command::execute(Environment &env) {
     assert(cairo && cairo_surface);
 
-    cout << "commande " << _path.to_tmp_variable() << endl;
-
     // Initialization
     auto it = _path.begin();
     cairo_move_to(cairo, it->get_x(), it->get_y()); // we move to the first point

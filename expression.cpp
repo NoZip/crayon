@@ -33,7 +33,7 @@ VariableExpression::~VariableExpression() {
 float VariableExpression::calculate() {
 	Variable var = _env->get_variable(_name);
 	assert(var.type == SCALAR);
-	float value = *((float *) var.value);
+	float value = ((Expression *) var.value)->calculate();
 	return value;
 }
 

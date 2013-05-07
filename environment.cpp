@@ -5,6 +5,7 @@
 
 #include "point.hpp"
 #include "path.hpp"
+#include "expression.hpp"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void print_map(const map<string, Variable> &m) {
     Variable v = it->second;
     switch (v.type) {
       case SCALAR:
-      std::cout << "Value=" << *((float*) it->second.value) << std::endl;
+      std::cout << "Value=" << ((Expression*) it->second.value)->calculate() << std::endl;
       break;
 
       case VECTOR2D:
@@ -53,7 +54,7 @@ Variable Environment::get_variable(const string &name) {
     }
     else {
       print_map(_variables);
-      throw;
+      throw string("FUCk IT");
     }
   }
 }
@@ -62,7 +63,6 @@ void Environment::set_variable(const string &name, VariableType type, void *valu
   cout << "variable " << name << " set" << endl; 
   Variable v = {type, value};
   _variables[name] = v;
-  print_map(_variables);
 }
 
 

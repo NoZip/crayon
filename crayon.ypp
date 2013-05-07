@@ -122,13 +122,13 @@ inequation : expression EQUAL expression {$$ = new BinaryInequation(INEQ_EQUAL, 
 point : RPAR expression COMMA expression LPAR {
     Point *p = new Point($2->calculate(), $4->calculate());
     $$ = p;
+    printf("%s\n", $$->to_tmp_variable().c_str());
 }
 /*
 | RPAR expression DOUBLE_DOT expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
 }
-*/
 | NAME {
     Variable v = root_env->get_variable(string($1));
     if (v.type == VECTOR2D) {
@@ -138,7 +138,6 @@ point : RPAR expression COMMA expression LPAR {
         throw "MOTHERFUCKING ERROR!";
     }
   }
-/*
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
   $$ = new Point($3->translate(*$5));
 }
@@ -189,7 +188,6 @@ path : path PATH_SEPARATOR point {
 
 command : DRAW_COMMAND path SEMICOLON {
     Command *c = new Command(DRAW, *$2);
-    std::cout << $2->to_tmp_variable() << std::endl;
     delete $2;
     $$ = c;
     c->execute(*root_env);
@@ -229,8 +227,7 @@ command : DRAW_COMMAND path SEMICOLON {
 variable: NAME EQ expression SEMICOLON {
 $$ = new VariableAffectation(string($1), SCALAR, $3);
 $$->execute(*root_env);
-// root_env->set_variable(string($1), SCALAR, new float($3->calculate()));
-// printf("template calculus: %f\n", $3->calculate());
+printf("template calculus: %f\n", $3->calculate());
 }
 // | NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
 // | NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}

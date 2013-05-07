@@ -5,6 +5,7 @@
 
 #include "instruction.hpp"
 #include "environment.hpp"
+#include "expression.hpp"
 
 using std::string;
 
@@ -14,7 +15,7 @@ protected:
   Variable _value;
 
 public:
-  VariableAffectation(const string &name, VariableType type, void *value);
+  VariableAffectation(const string &name, VariableType type, Expression *value);
   virtual ~VariableAffectation();
 
   virtual void execute(Environment &env);

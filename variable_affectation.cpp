@@ -2,7 +2,7 @@
 
 using namespace std;
 
-VariableAffectation::VariableAffectation(const string &name, VariableType type, void *value) {
+VariableAffectation::VariableAffectation(const string &name, VariableType type, Expression *value) {
     _name = name;
     _value = {type, value};
 }

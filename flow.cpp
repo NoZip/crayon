@@ -23,7 +23,7 @@ void Flow::append(Instruction *i) {
   _instructions.push_back(i);
 }
 
-void Flow::execute(const Environment &env) {
+void Flow::execute(Environment &env) {
   // for (auto it = _instructions.begin(); it != _instructions.end(); it) {
   //   Command c = *((Command*) *it);
   //   cout << "commande " << c.get_path().to_string() << endl;
