@@ -42,6 +42,10 @@ Command::Command(CommandName name, Path p) {
     _path = p;
 }
 
+Command::~Command() {
+    
+}
+
 Path Command::get_path() {
     return _path;
 }
@@ -49,7 +53,7 @@ Path Command::get_path() {
 /**
  * Calls the command.
  */
-void Command::execute(const Environment &env) {
+void Command::execute(Environment &env) {
     assert(cairo && cairo_surface);
 
     cout << "commande " << _path.to_tmp_variable() << endl;

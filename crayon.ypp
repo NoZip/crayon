@@ -10,6 +10,7 @@
 
 #include "instruction.hpp"
 #include "command.hpp"
+#include "variable_affectation.hpp"
 #include "flow.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
@@ -30,6 +31,7 @@ using std::string;
     Expression* expression;
     Inequation* inequation;
     Command *command;
+    VariableAffectation* variable;
     Flow* flow;
 }
 
@@ -44,6 +46,7 @@ using std::string;
 %type <path> path
 
 %type <command> command
+%type <variable> variable
 %type <flow> flow
 
 
@@ -189,7 +192,7 @@ command : DRAW_COMMAND path SEMICOLON {
     std::cout << $2->to_tmp_variable() << std::endl;
     delete $2;
     $$ = c;
-    c->execute(root_env);
+    c->execute(*root_env);
 }
 | DRAW_COMMAND NAME SEMICOLON {
     Variable v = root_env->get_variable(string($2));
@@ -201,13 +204,13 @@ command : DRAW_COMMAND path SEMICOLON {
 
     Command *c = new Command(DRAW, p);
     $$ = c;
-    c->execute(root_env);
+    c->execute(*root_env);
 }
 | FILL_COMMAND path SEMICOLON {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
-    c->execute(root_env);
+    c->execute(*root_env);
 }
 | FILL_COMMAND NAME SEMICOLON {
     Variable v = root_env->get_variable(string($2));
@@ -219,16 +222,18 @@ command : DRAW_COMMAND path SEMICOLON {
 
     Command *c = new Command(FILL, p);
     $$ = c;
-    c->execute(root_env);
+    c->execute(*root_env);
 }
 ;
 
 variable: NAME EQ expression SEMICOLON {
-root_env->set_variable(string($1), SCALAR, new float($3->calculate()));
-printf("template calculus: %f\n", $3->calculate());
+$$ = new VariableAffectation(string($1), SCALAR, $3);
+$$->execute(*root_env);
+// root_env->set_variable(string($1), SCALAR, new float($3->calculate()));
+// printf("template calculus: %f\n", $3->calculate());
 }
-| NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
-| NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}
+// | NAME EQ point SEMICOLON {root_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
+// | NAME EQ path SEMICOLON {root_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}
 // | NAME EQ image SEMICOLON
 ;
 

@@ -5,7 +5,9 @@
 
 class Instruction {
 public:
-  virtual void execute(const Environment &env) = 0;
+  ~Instruction() {}
+
+  virtual void execute(Environment &env) = 0;
 };
 
 #endif

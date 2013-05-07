@@ -6,8 +6,10 @@
 
 #include "expression.hpp"
 #include "inequation.hpp"
+
 #include "instruction.hpp"
 #include "command.hpp"
+#include "variable_affectation.hpp"
 
 #include "flow.hpp"
 
