@@ -24,7 +24,7 @@ class Inequation {
 public:
   virtual ~Inequation();
 
-  virtual bool calculate() = 0;
+  virtual bool calculate(Environment &env) = 0;
 };
 
 class ConstantInequation : public Inequation {
@@ -35,20 +35,20 @@ public:
   ConstantInequation(bool value);
   virtual ~ConstantInequation();
 
-  virtual bool calculate();
+  virtual bool calculate(Environment &env);
 };
 
-class VariableInequation : public Inequation {
-protected:
-  Environment *_env;
-  string _name;
+// class VariableInequation : public Inequation {
+// protected:
+//   Environment *_env;
+//   string _name;
 
-public:
-  VariableInequation(Environment *env, const string &name);
-  virtual ~VariableInequation();
+// public:
+//   VariableInequation(Environment *env, const string &name);
+//   virtual ~VariableInequation();
 
-  virtual bool calculate();
-};
+//   virtual bool calculate(Environment &env);
+// };
 
 class UnaryInequation : public Inequation {
 protected:
@@ -59,7 +59,7 @@ public:
   UnaryInequation(InequationOperator op, Inequation *expr);
   virtual ~UnaryInequation();
 
-  virtual bool calculate();
+  virtual bool calculate(Environment &env);
 };
 
 class BinaryInequation : public Inequation {
@@ -72,7 +72,7 @@ public:
   BinaryInequation(InequationOperator op, Expression *expr1, Expression *expr2);
   virtual ~BinaryInequation();
 
-  virtual bool calculate();
+  virtual bool calculate(Environment &env);
 };
 
 class CompositeInequation : public Inequation {
@@ -85,7 +85,7 @@ public:
   CompositeInequation(InequationOperator op, Inequation *expr1, Inequation *expr2);
   virtual ~CompositeInequation();
 
-  virtual bool calculate();
+  virtual bool calculate(Environment &env);
 };
 
 #endif

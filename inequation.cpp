@@ -16,26 +16,26 @@ ConstantInequation::~ConstantInequation() {
 	
 }
 
-bool ConstantInequation::calculate() {
+bool ConstantInequation::calculate(Environment &env) {
 	return _value;
 }
 
 
-VariableInequation::VariableInequation(Environment *env, const string &name) {
-	_env = env;
-	_name = name;
-}
+// VariableInequation::VariableInequation(Environment *env, const string &name) {
+// 	_env = env;
+// 	_name = name;
+// }
 
-VariableInequation::~VariableInequation() {
+// VariableInequation::~VariableInequation() {
 	
-}
+// }
 
-bool VariableInequation::calculate() {
-	Variable var = _env->get_variable(_name);
-	assert(var.type == BOOLEAN);
-	bool value = ((Inequation *) var.value)->calculate();
-	return value;
-}
+// bool VariableInequation::calculate() {
+// 	Variable var = _env->get_variable(_name);
+// 	assert(var.type == BOOLEAN);
+// 	bool value = ((Inequation *) var.value)->calculate();
+// 	return value;
+// }
 
 
 UnaryInequation::UnaryInequation(InequationOperator op, Inequation *expr) {
@@ -47,12 +47,12 @@ UnaryInequation::~UnaryInequation() {
 	delete _expr;
 }
 
-bool UnaryInequation::calculate() {
+bool UnaryInequation::calculate(Environment &env) {
 	bool result;
 
 	switch(_op) {
 		case INEQ_NOT:
-			result = !_expr->calculate();
+			result = !_expr->calculate(env);
 			break;
 	}
 
@@ -71,32 +71,32 @@ BinaryInequation::~BinaryInequation() {
 	delete _expr2;
 }
 
-bool BinaryInequation::calculate() {
+bool BinaryInequation::calculate(Environment &env) {
 	bool result;
 
 	switch(_op) {
 		case INEQ_EQUAL:
-			result = _expr1->calculate() == _expr2->calculate();
+			result = _expr1->calculate(env) == _expr2->calculate(env);
 			break;
 
 		case INEQ_NEQUAL:
-			result = _expr1->calculate() != _expr2->calculate();
+			result = _expr1->calculate(env) != _expr2->calculate(env);
 			break;
 
 		case INEQ_GT:
-			result = _expr1->calculate() > _expr2->calculate();
+			result = _expr1->calculate(env) > _expr2->calculate(env);
 			break;
 
 		case INEQ_GTE:
-			result = _expr1->calculate() >= _expr2->calculate();
+			result = _expr1->calculate(env) >= _expr2->calculate(env);
 			break;
 
 		case INEQ_LT:
-			result = _expr1->calculate() < _expr2->calculate();
+			result = _expr1->calculate(env) < _expr2->calculate(env);
 			break;
 
 		case INEQ_LTE:
-			result = _expr1->calculate() <= _expr2->calculate();
+			result = _expr1->calculate(env) <= _expr2->calculate(env);
 			break;
 	}
 
@@ -115,16 +115,16 @@ CompositeInequation::~CompositeInequation() {
  delete _expr2;
 }
 
-bool CompositeInequation::calculate() {
+bool CompositeInequation::calculate(Environment &env) {
 	bool result;
 
 	switch(_op) {
 		case INEQ_AND:
-			result = _expr1->calculate() && _expr2->calculate();
+			result = _expr1->calculate(env) && _expr2->calculate(env);
 			break;
 
 		case INEQ_OR:
-			result = _expr1->calculate() || _expr2->calculate();
+			result = _expr1->calculate(env) || _expr2->calculate(env);
 			break;
 
 	}
