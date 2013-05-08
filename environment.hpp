@@ -34,6 +34,7 @@ public:
   
   Variable get_variable(const string &name);
   void set_variable(const string &name, VariableType type, void *value);
+  void clear();
 };
 
 #endif

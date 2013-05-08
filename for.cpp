@@ -5,7 +5,7 @@
 
 using namespace std;
 
-For::For(VariableAffectation *var1, Inequation *comp, VariableAffectation *var2, Flow *flow){
+For::For(Instruction *var1, Inequation *comp, Instruction *var2, Flow *flow){
   _var1 = var1;
   _comp = comp;
   _var2 = var2;
@@ -18,7 +18,7 @@ bool For::is_block() {
 
 void For::execute(Environment &env){
   _var1->execute(env);
-  Environment child_env(env);
+  Environment child_env(&env);
   
   while(_comp->calculate(env)){
     _flow->execute(child_env);

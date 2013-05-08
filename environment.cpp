@@ -43,9 +43,10 @@ Variable Environment::get_variable(const string &name) {
 }
 
 void Environment::set_variable(const string &name, VariableType type, void *value) {
-  cout << "variable " << name << " set" << endl;
   Variable v = {type, value};
   _variables[name] = v;
 }
 
-
+void Environment::clear() {
+  _variables.clear();
+}

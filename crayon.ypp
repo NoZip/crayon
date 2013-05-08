@@ -14,6 +14,8 @@
 #include "command.hpp"
 #include "variable_affectation.hpp"
 #include "flow.hpp"
+
+#include "for.hpp"
 // #include "conditional.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
@@ -35,7 +37,6 @@ using std::string;
     Inequation* inequation;
     Instruction* instruction;
     Command *command;
-    VariableAffectation* variable;
     Flow* flow;
     // Conditional* conditional;
     // While* while;
@@ -48,14 +49,16 @@ using std::string;
 %type <expression> expression
 %type <inequation> inequation
 
+%type <point> spoint
 %type <point> point
 %type <path> path
 
 %type <instruction> instruction
 %type <command> command
-%type <variable> variable
+%type <instruction> variable
 %type <flow> flow
 %type <flow> block
+%type <instruction> for
 // %type <conditional> conditional
 
 
@@ -73,11 +76,15 @@ using std::string;
 %token ROTATE_BUILDIN
 %token LBRACE
 %token RBRACE
+%token FOR
 %token CONDITIONALIF
 %token CONDITIONALELSE
 %token WHILE
+
 %left PLUS MINUS
 %left MUL DIV
+%left OR
+%left AND
 %left UNARY
 
 %{
@@ -102,6 +109,7 @@ image : flow {$1->execute(current_env);}
 instruction : command SEMICOLON {$$ = $1;}
 | variable SEMICOLON {$$ = $1;}
 | block {$$ = $1;}
+| for {$$ = $1;}
 ;
 
 flow : flow instruction {$$ = $1; $$->append($2);}
@@ -127,15 +135,24 @@ inequation : expression EQUAL expression {$$ = new BinaryInequation(INEQ_EQUAL, 
 | expression GTE expression {$$ = new BinaryInequation(INEQ_GTE, $1, $3);}
 | expression LT expression {$$ = new BinaryInequation(INEQ_LT, $1, $3);}
 | expression LTE expression {$$ = new BinaryInequation(INEQ_LTE, $1, $3);}
-| RPAR expression LPAR {$$ = $2;}
-| NOT inequation {$$ = new UnaryInequation(INEQ_NOT, $2);}
+| NOT inequation %prec UNARY {$$ = new UnaryInequation(INEQ_NOT, $2);}
 | inequation AND inequation {$$ = new CompositeInequation(INEQ_AND, $1, $3);}
 | inequation OR inequation {$$ = new CompositeInequation(INEQ_OR, $1, $3);}
 | RPAR inequation LPAR {$$ = $2;} 
 ;
 
+point : NAME {
+    Variable v = current_env.get_variable(string($1));
+    if (v.type == VECTOR2D) {
+        $$ = (Point*) v.value;
+    }
+    else {
+        throw VariableError(string("La variable n'est pas un point\n"));
+    }
+  }
+| spoint
 
-point : RPAR expression COMMA expression LPAR {
+spoint : RPAR expression COMMA expression LPAR {
     Point *p = new Point($2, $4);
     $$ = p;
 }
@@ -144,15 +161,6 @@ point : RPAR expression COMMA expression LPAR {
     Point *p = new Point(Point::from_polar($2, $4));
     $$ = p;
 }
-| NAME {
-    Variable v = current_env->get_variable(string($1));
-    if (v.type == VECTOR2D) {
-        $$ = (Point*) v.value;
-    }
-    else {
-        throw VariableError(string("La variable n'est pas un point\n");
-    }
-  }
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
   $$ = new Point($3->translate(*$5));
 }
@@ -243,15 +251,19 @@ command : DRAW_COMMAND path {
 */
 ;
 
-variable: NAME EQ expression {
-$$ = new VariableAffectation(string($1), SCALAR, $3);
+variable: NAME EQ NAME {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
+| NAME EQ sexpression {$$ = new VariableAffectation(string($1), SCALAR, $3);}
+| NAME PLUS EQ sexpression {
+    $$ = new VariableIncrement(string($1), EXPR_PLUS, $4);
 }
-// | NAME EQ point {current_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
-// | NAME EQ path {current_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}
+| NAME EQ spoint {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
+| NAME EQ path {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
 // | NAME EQ image
 ;
 
 block : LBRACE flow RBRACE {$$ = $2;}
+
+for : FOR RPAR variable SEMICOLON inequation SEMICOLON variable LPAR block {$$ = new For($3, $5, $7, $9);}
 
 /*
 image: IMG_START flow IMG_END
