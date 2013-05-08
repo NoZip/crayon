@@ -30,7 +30,7 @@ public:
     Path get_path();
 
     virtual void print();
-    virtual void execute();
+    virtual void execute(Environment &env);
 };
 
 #endif

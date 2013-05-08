@@ -16,47 +16,23 @@ Point::Point(Expression *x, Expression *y) {
   _y = y;
 }
 
-string Point::to_tmp_variable() const {
-  string s;
-
-  s += "Point(" + to_string(_x->calculate()) + "," + to_string(_y->calculate()) + ")";
-
-  return s;
+float Point::get_x(Environment &env) const {
+  return _x->calculate(env);
 }
 
-string Point::to_variable_affectation(string name) const {
-  string s;
-
-  // s.append("Point ");
-  // s.append(name);
-  // s.append("(");
-  // s.append(to_string(_x));
-  // s.append(",");
-  // s.append(to_string(_y));
-  // s.append(");");
-
-  s += "Point " + name + "(" + to_string(_x->calculate()) + "," + to_string(_y->calculate()) + ");";
-
-  return s;
+float Point::get_y(Environment &env) const {
+  return _y->calculate(env);
 }
 
-float Point::get_x() const {
-  return _x->calculate();
-}
+// float Point::get_theta() const {
+//   return atan2(get_y(), get_x());
+// }
 
-float Point::get_y() const {
-  return _y->calculate();
-}
-
-float Point::get_theta() const {
-  return atan2(get_y(), get_x());
-}
-
-float Point::get_r() const {
-  float x = get_x();
-  float y = get_y();
-  return sqrt(x * x + y * y);
-}
+// float Point::get_r() const {
+//   float x = get_x();
+//   float y = get_y();
+//   return sqrt(x * x + y * y);
+// }
 
 Expression* Point::get_x_expression() const {
   return _x;

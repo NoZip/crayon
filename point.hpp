@@ -4,6 +4,7 @@
 #include <string>
 
 #include "expression.hpp"
+#include "environment.hpp"
 
 using std::string;
 
@@ -12,14 +13,11 @@ class Point {
   // static Point from_polar(float theta, float r);
 
   Point(Expression *x, Expression *y);
-
-  string to_tmp_variable() const;
-  string to_variable_affectation(string name)const;
   
-  float get_x() const;
-  float get_y() const;
-  float get_theta() const;
-  float get_r() const;
+  float get_x(Environment &env) const;
+  float get_y(Environment &env) const;
+  // float get_theta() const;
+  // float get_r() const;
 
   Expression* get_x_expression() const;
   Expression* get_y_expression() const;

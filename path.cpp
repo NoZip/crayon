@@ -3,37 +3,6 @@
 
 using namespace std;
 
-string Path::to_tmp_variable() const {
-  string s;
-
-  s.append("{");
-
-  for (auto it = begin(); it != end(); ++it) {
-    if (it != begin()) {
-      s.append(",");
-    }
-    
-    s.append(it->to_tmp_variable());
-  }
-
-  s.append("}");
-
-  return s;
-}
-
-string Path::to_variable_affectation(string name) const {
-  string s;
-
-  // s.append("Path ");
-  // s.append(name);
-  // s.append(" = ");
-  // s.append(to_tmp_variable());
-  // s.append(";");
-
-  s += "Path " + name + " = " + to_tmp_variable() + ";";
-
-  return s;
-}
 
 void Path::append(const Point &p){
   this->push_back(p);

@@ -4,8 +4,7 @@
 
 using namespace std;
 
-VariableAffectation::VariableAffectation(Environment *env, const string &name, VariableType type, Expression *value) {
-    _env = env;
+VariableAffectation::VariableAffectation(const string &name, VariableType type, Expression *value) {
     _name = name;
     _value = {type, value};
 }
@@ -18,6 +17,6 @@ void VariableAffectation::print() {
     std::cout << "variable " << std::endl;
 }
 
-void VariableAffectation::execute() {
-    _env->set_variable(_name, _value.type, _value.value);
+void VariableAffectation::execute(Environment &env) {
+    env.set_variable(_name, _value.type, _value.value);
 }

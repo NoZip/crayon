@@ -16,13 +16,12 @@ ConstantExpression::~ConstantExpression() {
 	
 }
 
-float ConstantExpression::calculate() {
+float ConstantExpression::calculate(Environment &env) {
 	return _value;
 }
 
 
-VariableExpression::VariableExpression(Environment *env, const string &name) {
-	_env = env;
+VariableExpression::VariableExpression(const string &name) {
 	_name = name;
 }
 
@@ -30,10 +29,10 @@ VariableExpression::~VariableExpression() {
 	
 }
 
-float VariableExpression::calculate() {
-	Variable var = _env->get_variable(_name);
+float VariableExpression::calculate(Environment &env) {
+	Variable var = env.get_variable(_name);
 	assert(var.type == SCALAR);
-	float value = ((Expression *) var.value)->calculate();
+	float value = ((Expression *) var.value)->calculate(env);
 	return value;
 }
 
@@ -47,12 +46,12 @@ UnaryExpression::~UnaryExpression() {
 	delete _expr;
 }
 
-float UnaryExpression::calculate() {
+float UnaryExpression::calculate(Environment &env) {
 	float result;
 
 	switch(_op) {
 		case EXPR_NEGATE:
-			result = -_expr->calculate();
+			result = -_expr->calculate(env);
 			break;
 	}
 
@@ -71,24 +70,24 @@ BinaryExpression::~BinaryExpression() {
 	delete _expr2;
 }
 
-float BinaryExpression::calculate() {
+float BinaryExpression::calculate(Environment &env) {
 	float result;
 
 	switch(_op) {
 		case EXPR_PLUS:
-			result = _expr1->calculate() + _expr2->calculate();
+			result = _expr1->calculate(env) + _expr2->calculate(env);
 			break;
 
 		case EXPR_MINUS:
-			result = _expr1->calculate() - _expr2->calculate();
+			result = _expr1->calculate(env) - _expr2->calculate(env);
 			break;
 
 		case EXPR_MUL:
-			result = _expr1->calculate() * _expr2->calculate();
+			result = _expr1->calculate(env) * _expr2->calculate(env);
 			break;
 
 		case EXPR_DIV:
-			result = _expr1->calculate() / _expr2->calculate();
+			result = _expr1->calculate(env) / _expr2->calculate(env);
 			break;
 	}
 

@@ -91,23 +91,24 @@ extern "C" {
     int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param);
 }
 
-Environment *current_env = new Environment();
+Environment current_env;
 %}
 
 %%
 
-image : flow {$1->execute();}
+image : flow {$1->execute(current_env);}
 ;
 
 instruction : command SEMICOLON {$$ = $1;}
 | variable SEMICOLON {$$ = $1;}
+| block {$$ = $1;}
 ;
 
 flow : flow instruction {$$ = $1; $$->append($2);}
 | instruction {Flow *f = new Flow(); f->append($1); $$ = f;}
 ;
 
-expression : NAME {$$ = new VariableExpression(current_env, string($1));}
+expression : NAME {$$ = new VariableExpression(string($1));}
 | sexpression
 
 // Computes mathematical expressions
@@ -206,6 +207,7 @@ command : DRAW_COMMAND path {
     $$ = c;
     // c->execute(*current_env);
 }
+/*
 | DRAW_COMMAND NAME {
     Variable v = current_env->get_variable(string($2));
 
@@ -218,12 +220,14 @@ command : DRAW_COMMAND path {
     $$ = c;
     // c->execute(*current_env);
 }
+*/
 | FILL_COMMAND path {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
     // c->execute(*current_env);
 }
+/*
 | FILL_COMMAND NAME {
     Variable v = current_env->get_variable(string($2));
 
@@ -236,19 +240,18 @@ command : DRAW_COMMAND path {
     $$ = c;
     // c->execute(*current_env);
 }
+*/
 ;
 
 variable: NAME EQ expression {
-$$ = new VariableAffectation(current_env, string($1), SCALAR, $3);
+$$ = new VariableAffectation(string($1), SCALAR, $3);
 }
 // | NAME EQ point {current_env->set_variable(string($1), VECTOR2D, new Point(*$3)); delete $3;}
 // | NAME EQ path {current_env->set_variable(string($1), PATH, new Path(*$3)); delete $3;}
 // | NAME EQ image
 ;
 
-block_start : LBRACE {current_env = new Environment(current_env);}
-
-block : block_start flow RBRACE {current_env = current_env.get_parent(); $$ = $2;}
+block : LBRACE flow RBRACE {$$ = $2;}
 
 /*
 image: IMG_START flow IMG_END

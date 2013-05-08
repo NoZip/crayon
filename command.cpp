@@ -72,16 +72,16 @@ void Command::print() {
 /**
  * Calls the command.
  */
-void Command::execute() {
+void Command::execute(Environment &env) {
     assert(cairo && cairo_surface);
 
     // Initialization
     auto it = _path.begin();
-    cairo_move_to(cairo, it->get_x(), it->get_y()); // we move to the first point
+    cairo_move_to(cairo, it->get_x(env), it->get_y(env)); // we move to the first point
     
     // Iteration
     for (++it; it != _path.end(); ++it) {
-        cairo_line_to(cairo, it->get_x(), it->get_y());
+        cairo_line_to(cairo, it->get_x(env), it->get_y(env));
     }
 
     switch (_name) {

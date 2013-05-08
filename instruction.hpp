@@ -10,7 +10,8 @@ public:
   ~Instruction() {}
 
   virtual void print() {std::cout << "instruction" << std::endl;}
-  virtual void execute() = 0;
+  virtual bool is_block() {return false;}
+  virtual void execute(Environment &env) = 0;
 };
 
 #endif

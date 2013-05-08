@@ -19,7 +19,7 @@ class Expression {
 public:
   virtual ~Expression();
 
-  virtual float calculate() = 0;
+  virtual float calculate(Environment &env) = 0;
 };
 
 class ConstantExpression : public Expression {
@@ -30,19 +30,18 @@ public:
   ConstantExpression(float value);
   virtual ~ConstantExpression();
 
-  virtual float calculate();
+  virtual float calculate(Environment &env);
 };
 
 class VariableExpression : public Expression {
 protected:
-  Environment *_env;
   string _name;
 
 public:
-  VariableExpression(Environment *env, const string &name);
+  VariableExpression(const string &name);
   virtual ~VariableExpression();
 
-  virtual float calculate();
+  virtual float calculate(Environment &env);
 };
 
 class UnaryExpression : public Expression {
@@ -54,7 +53,7 @@ public:
   UnaryExpression(ExpressionOperator op, Expression *expr);
   virtual ~UnaryExpression();
 
-  virtual float calculate();
+  virtual float calculate(Environment &env);
 };
 
 class BinaryExpression : public Expression {
@@ -67,7 +66,7 @@ public:
   BinaryExpression(ExpressionOperator op, Expression *expr1, Expression *expr2);
   virtual ~BinaryExpression();
 
-  virtual float calculate();
+  virtual float calculate(Environment &env);
 };
 
 #endif

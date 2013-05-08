@@ -16,7 +16,8 @@ public:
 
 
   void print();
-  virtual void execute();
+  bool is_block();
+  virtual void execute(Environment &env);
 
 protected:
   list<Instruction*> _instructions;
