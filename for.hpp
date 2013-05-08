@@ -6,13 +6,15 @@
 #include "inequation.hpp"
 #include "flow.hpp"
 
-class For: public Instruction{
+class For: public Instruction {
 protected:
   VariableAffectation *_var1, *_var2;
   Inequation *_comp;
   Flow *_flow;
 public:
   For(VariableAffectation *var1, Inequation *comp, VariableAffectation *var2, Flow *flow);
+
+  bool is_block();
   void execute(Environment &env);
 };
 
