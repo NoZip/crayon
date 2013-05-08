@@ -31,16 +31,8 @@ void Flow::print() {
   }
 }
 
-void Flow::execute(Environment &env) {
-  // for (auto it = _instructions.begin(); it != _instructions.end(); it) {
-  //   Command c = *((Command*) *it);
-  //   cout << "commande " << c.get_path().to_string() << endl;
-  // }
-  
-  cout << _instructions.size() << endl;
-  print();
-
+void Flow::execute() {
   for (auto it = _instructions.begin(); it != _instructions.end(); ++it) {
-    (*it)->execute(env);
+    (*it)->execute();
   }
 }

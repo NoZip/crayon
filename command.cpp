@@ -72,7 +72,7 @@ void Command::print() {
 /**
  * Calls the command.
  */
-void Command::execute(Environment &env) {
+void Command::execute() {
     assert(cairo && cairo_surface);
 
     // Initialization

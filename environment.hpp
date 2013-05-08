@@ -30,6 +30,8 @@ public:
   Environment(Environment *parent);
   virtual ~Environment();
 
+  Environment* get_parent();
+
   void print_map();
   
   Variable get_variable(const string &name);

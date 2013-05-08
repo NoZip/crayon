@@ -24,6 +24,10 @@ Environment::~Environment() {
   
 }
 
+Environment* Environment::get_parent() {
+  return _parent;
+}
+
 void Environment::print_map() {
   std::cout << "MAP" << std::endl;
   for (auto it = _variables.begin(); it != _variables.end(); ++it) {

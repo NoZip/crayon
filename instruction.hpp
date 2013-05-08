@@ -10,7 +10,7 @@ public:
   ~Instruction() {}
 
   virtual void print() {std::cout << "instruction" << std::endl;}
-  virtual void execute(Environment &env) = 0;
+  virtual void execute() = 0;
 };
 
 #endif
