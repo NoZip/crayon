@@ -10,29 +10,26 @@ using std::string;
 
 class Point {
  public:
-  // static Point from_polar(float theta, float r);
+  // static Point from_polar(Expression *theta, Expression *r);
   Point();
-  Point(Expression *x, Expression *y);
+  Point(float x, float y);
   
-  float get_x(Environment &env) const;
-  float get_y(Environment &env) const;
+  float get_x() const;
+  float get_y() const;
   // float get_theta() const;
   // float get_r() const;
-
-  Expression* get_x_expression() const;
-  Expression* get_y_expression() const;
   
   // Point translate(Point v);
   // Point rotate(Point c, float angle);
 
-  Point operator+(const Point p2);
-  Point operator-(const Point p2);
-  Point operator*(const Point p2);
-  Point operator/(const Point p2);
+  Point operator+(const Point &p2);
+  Point operator-(const Point &p2);
+  Point operator*(const Point &p2);
+  Point operator/(const Point &p2);
 
  protected:
-  Expression *_x;
-  Expression *_y;
+  float _x;
+  float _y;
 };
 
 // Point operator+(const Point &p1, const Point &p2);

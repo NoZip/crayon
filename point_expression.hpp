@@ -42,10 +42,11 @@ public:
 
 class ConstantPointExpression : public PointExpression {
 protected:
-  Point _value;
+  Expression *_x;
+  Expression *_y;
 
 public:
-  ConstantPointExpression(const Point &value);
+  ConstantPointExpression(Expression *x, Expression *y);
   //virtual ~ConstantPointExpression();
 
   virtual Point calculate(Environment &env);

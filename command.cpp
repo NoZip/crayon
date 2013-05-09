@@ -41,16 +41,16 @@ void Command::write_png_file(const char *filename) {
     cairo_surface_write_to_png(cairo_surface, filename);
 }
 
-Command::Command(CommandName name, Path p) {
+Command::Command(CommandName name, Path *p) {
     _name = name;
     _path = p;
 }
 
 Command::~Command() {
-    
+    delete _path;
 }
 
-Path Command::get_path() {
+Path* Command::get_path() {
     return _path;
 }
 
@@ -79,12 +79,14 @@ void Command::execute(Environment &env) {
     assert(cairo && cairo_surface);
 
     // Initialization
-    auto it = _path.begin();
-    cairo_move_to(cairo, it->get_x(env), it->get_y(env)); // we move to the first point
+    auto it = _path->begin();
+    Point p = (*it)->calculate(env);
+    cairo_move_to(cairo, p.get_x(), p.get_y()); // we move to the first point
     
     // Iteration
-    for (++it; it != _path.end(); ++it) {
-        cairo_line_to(cairo, it->get_x(env), it->get_y(env));
+    for (++it; it != _path->end(); ++it) {
+        p = (*it)->calculate(env);
+        cairo_line_to(cairo, p.get_x(), p.get_y());
     }
 
     switch (_name) {
@@ -118,7 +120,7 @@ void VariableCommand::execute(Environment &env) {
     switch(var.type) {
         case PATH_TYPE: {
             Path *p = (Path*) var.value;
-            Command cmd = Command(_name, *p);
+            Command cmd = Command(_name, p);
             cmd.execute(env);
             break;
         }

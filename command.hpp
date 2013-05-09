@@ -20,7 +20,7 @@ enum CommandName {
 class Command : public Instruction {
 protected:
     CommandName _name;
-    Path _path;
+    Path *_path;
 
 public:
     static void init_cairo(cairo_format_t format, size_t width, size_t height);
@@ -28,10 +28,10 @@ public:
 
     static void write_png_file(const char *filename);
 
-    Command(CommandName name, Path p);
+    Command(CommandName name, Path *p);
     virtual ~Command();
 
-    Path get_path();
+    Path* get_path();
 
     virtual void print();
     virtual void execute(Environment &env);

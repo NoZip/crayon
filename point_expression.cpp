@@ -17,7 +17,7 @@ VarPointExpression::VarPointExpression(const string &name){
 
 Point VarPointExpression::calculate(Environment &env){
   Variable var = env.get_variable(_name);
-  assert(var.type == SCALAR);
+  assert(var.type == VECTOR2D);
   Point value = ((PointExpression *) var.value)->calculate(env);
   return value;
 }
@@ -34,11 +34,11 @@ BinaryPointExpression::BinaryPointExpression(ExpressionOperator op, PointExpress
 	}*/
 
 Point BinaryPointExpression::calculate(Environment &env) {
-  Point result(NULL,NULL);
+  // Point result(NULL,NULL);
 
   switch(_op) {
   case EXPR_PLUS:
-    result = _expr1->calculate(env) + _expr2->calculate(env);
+    return  _expr1->calculate(env) + _expr2->calculate(env);
     break;
     /* 
   case EXPR_MINUS:
@@ -54,11 +54,12 @@ Point BinaryPointExpression::calculate(Environment &env) {
     break;*/
   }
   
-  return result;
+  // return result;
 }
 
-ConstantPointExpression::ConstantPointExpression(const Point &value) {
-  _value = value;
+ConstantPointExpression::ConstantPointExpression(Expression *x, Expression*y) {
+  _x = x;
+  _y = y;
 }
 
 /*ConstantPointExpression::~ConstantPointExpression() {
@@ -66,5 +67,5 @@ ConstantPointExpression::ConstantPointExpression(const Point &value) {
   }*/
 
 Point ConstantPointExpression::calculate(Environment &env) {
-	return _value;
+	return Point(_x->calculate(env), _y->calculate(env));
 }

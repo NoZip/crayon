@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 
 #include "expression.hpp"
 
@@ -52,6 +53,14 @@ float UnaryExpression::calculate(Environment &env) {
 	switch(_op) {
 		case EXPR_NEGATE:
 			result = -_expr->calculate(env);
+			break;
+
+		case EXPR_SIN:
+			result = sin(_expr->calculate(env));
+			break;
+
+		case EXPR_COS:
+			result = cos(_expr->calculate(env));
 			break;
 	}
 

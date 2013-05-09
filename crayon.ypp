@@ -8,6 +8,7 @@
 
 #include "environment.hpp"
 #include "expression.hpp"
+#include "point_expression.hpp"
 #include "inequation.hpp"
 
 #include "instruction.hpp"
@@ -32,7 +33,7 @@ using std::string;
     float real;
     bool boolean;
     char* name;
-    Point* point;
+    PointExpression* point;
     Path* path;
     Expression* expression;
     Inequation* inequation;
@@ -149,26 +150,18 @@ inequation : expression EQUAL expression {$$ = new BinaryInequation(INEQ_EQUAL, 
 | RPAR inequation LPAR {$$ = $2;} 
 ;
 
-point : NAME {
-    Variable v = current_env.get_variable(string($1));
-    if (v.type == VECTOR2D) {
-        $$ = (Point*) v.value;
-    }
-    else {
-        throw VariableError(string("La variable n'est pas un point\n"));
-    }
-  }
+point : NAME {$$ = new VarPointExpression(string($1));}
 | spoint
 
 spoint : RPAR expression COMMA expression LPAR {
-    Point *p = new Point($2, $4);
-    $$ = p;
+    $$ = new ConstantPointExpression($2, $4);
 }
 /*
 | RPAR expression DOUBLE_DOT expression LPAR {
-    Point *p = new Point(Point::from_polar($2, $4));
-    $$ = p;
+    $$ = new ConstantPointExpression(Point::from_polar($2, $4));
 }
+*/
+/*
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
   $$ = new Point($3->translate(*$5));
 }
@@ -179,13 +172,11 @@ spoint : RPAR expression COMMA expression LPAR {
 ;
 
 path : path PATH_SEPARATOR point {
-    $1->append(*$3);
-    delete $3;
+    $1->append($3);
     $$ = $1;
 }
 | path PATH_SEPARATOR PLUS point {
-    $1->append_relative(*$4);
-    delete $4;
+    $1->append_relative($4);
     $$ = $1;
 }
 | path PATH_SEPARATOR CYCLE {
@@ -194,41 +185,34 @@ path : path PATH_SEPARATOR point {
 }
 | point PATH_SEPARATOR point {
     Path *c = new Path();
-    c->append(*$1);
-    c->append(*$3);
-    delete $1;
-    delete $3;
+    c->append($1);
+    c->append($3);
     $$ = c;
 }
 | point PATH_SEPARATOR PLUS point {
     Path *c = new Path();
-    c->append(*$1);
-    c->append_relative(*$4);
-    delete $1;
-    delete $4;
+    c->append($1);
+    c->append_relative($4);
     $$ = c;
 }
 | point PATH_SEPARATOR CYCLE {
     Path *c = new Path();
-    c->append(*$1);
+    c->append($1);
     c->append_cycle();
-    delete $1;
     $$ = c;
 }
 ;
 
 command : DRAW_COMMAND path {
-    Command *c = new Command(DRAW, *$2);
-    delete $2;
+    Command *c = new Command(DRAW, $2);
     $$ = c;
     // c->execute(*current_env);
 }
 | DRAW_COMMAND NAME {
-    $$ = new VariableCommand(DRAW, $2);
+    $$ = new VariableCommand(DRAW, string($2));
 }
 | FILL_COMMAND path {
-    Command *c = new Command(FILL, *$2);
-    delete $2;
+    Command *c = new Command(FILL, $2);
     $$ = c;
 }
 /*
@@ -251,7 +235,8 @@ variable: NAME EQ NAME {$$ = new VariableAffectation(string($1), SCALAR, new Con
 | VAR NAME EQ sexpression {$$ = new VariableInitialization(string($2), SCALAR, $4);}
 | NAME EQ sexpression {$$ = new VariableAffectation(string($1), SCALAR, $3);}
 | NAME PLUS EQ sexpression {$$ = new VariableIncrement(string($1), EXPR_PLUS, $4);}
-| NAME EQ spoint {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
+| NAME EQ spoint {$$ = new VariableAffectation(string($1), VECTOR2D, $3);}
+| VAR NAME EQ spoint {$$ = new VariableInitialization(string($2), VECTOR2D, $4);}
 | NAME EQ path {$$ = new VariableAffectation(string($1), PATH_TYPE, $3);}
 | VAR NAME EQ path {$$ = new VariableInitialization(string($2), PATH_TYPE, $4);}
 | NAME EQ image {$$ = new VariableAffectation(string($1), IMAGE_TYPE, $3);}
@@ -274,11 +259,6 @@ image: IMAGE block {$$ = $2;}
 /*
 rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
 
-*/
-
-/*
-while : WHILE RPAR inequation LPAR block
-;
 */
 
 %%

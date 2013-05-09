@@ -6,27 +6,28 @@
 
 using namespace std;
 
-// Point Point::from_polar(float theta, float r) {
-//   Point p(r * cos(theta), r * sin(theta));
-//   return p;
+// Point Point::from_polar(Expression *theta, Expression *r) {
+//   Expression *x_expr = new BinaryExpression(EXPR_MUL, r, new UnaryExpression(EXPR_COS, theta));
+//   Expression *y_expr = new BinaryExpression(EXPR_MUL, r, new UnaryExpression(EXPR_SIN, theta));
+//   return Point(x_expr, y_expr);
 // }
 
 Point::Point(){
-  _x = NULL;
-  _y = NULL;
+  _x = 0.0;
+  _y = 0.0;
 }
 
-Point::Point(Expression *x, Expression *y) {
+Point::Point(float x, float y) {
   _x = x;
   _y = y;
 }
 
-float Point::get_x(Environment &env) const {
-  return _x->calculate(env);
+float Point::get_x() const {
+  return _x;
 }
 
-float Point::get_y(Environment &env) const {
-  return _y->calculate(env);
+float Point::get_y() const {
+  return _y;
 }
 
 // float Point::get_theta() const {
@@ -39,17 +40,10 @@ float Point::get_y(Environment &env) const {
 //   return sqrt(x * x + y * y);
 // }
 
-Expression* Point::get_x_expression() const {
-  return _x;
-}
-
-Expression* Point::get_y_expression() const {
-  return _y;
-}
-
-// Point Point::translate(Point v) {  
-//   Point t(this->get_x() + v.get_x() , this->get_y() + v.get_y());
-//   return t;
+// Point Point::translate(Point v) { 
+//   Expression *x_expr = new BinaryExpression(EXPR_PLUS, _x, v._x);
+//   Expression *y_expr = new BinaryExpression(EXPR_PLUS, _y, v._y);
+//   return Point(x_expr, y_expr);
 // } 
 
 // Point Point::rotate(Point c, float angle) {
@@ -78,34 +72,18 @@ Expression* Point::get_y_expression() const {
 //   return t;
 // }
 
-Point Point::operator+(const Point p2){
-  Point p1 = *this;
-  p1._x = new BinaryExpression(EXPR_PLUS, p1.get_x_expression(), p2.get_x_expression());
-  p1._y = new BinaryExpression(EXPR_PLUS, p1.get_y_expression(), p2.get_y_expression());
-
-  return p1;
+Point Point::operator+(const Point &p2){
+  return Point(_x + p2._x, _y + p2._y);
 }
 
-Point Point::operator-(const Point p2){
-  Point p1 = *this;
-  p1._x = new BinaryExpression(EXPR_MINUS, p1.get_x_expression(), p2.get_x_expression());
-  p1._y = new BinaryExpression(EXPR_MINUS, p1.get_y_expression(), p2.get_y_expression());
-
-  return p1;
+Point Point::operator-(const Point &p2){
+  return Point(_x - p2._x, _y - p2._y);
 }
 
-Point Point::operator*(const Point p2){
-  Point p1 = *this;
-  p1._x = new BinaryExpression(EXPR_MUL, p1.get_x_expression(), p2.get_x_expression());
-  p1._y = new BinaryExpression(EXPR_MUL, p1.get_y_expression(), p2.get_y_expression());
-
-  return p1;
+Point Point::operator*(const Point &p2){
+  return Point(_x * p2._x, _y * p2._y);
 }
 
-Point Point::operator/(const Point p2){
-  Point p1 = *this;
-  p1._x = new BinaryExpression(EXPR_DIV, p1.get_x_expression(), p2.get_x_expression());
-  p1._y = new BinaryExpression(EXPR_DIV, p1.get_y_expression(), p2.get_y_expression());
-
-  return p1;
+Point Point::operator/(const Point &p2){
+  return Point(_x / p2._x, _y / p2._y);
 }

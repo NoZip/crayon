@@ -6,7 +6,9 @@ enum ExpressionOperator {
   EXPR_MINUS,
   EXPR_MUL,
   EXPR_DIV,
-  EXPR_NEGATE
+  EXPR_NEGATE,
+  EXPR_SIN,
+  EXPR_COS
 };
 
 #endif

@@ -1,0 +1,15 @@
+var test = 2*3 + 10;
+var line = (0, test * 10) -- +(200, 0);
+var n = 50;
+var p = (150, 150);
+var img = image {
+	fill (50, 50) -- (150, 50) -- p -- (50, 150) -- cycle;
+
+	var img = image {
+		draw (25, 25) -- +(150, 0) -- +(0, 150) -- +(-150, 0) -- cycle;
+	};
+
+	draw img;
+};
+draw img;
+draw line;
