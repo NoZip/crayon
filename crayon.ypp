@@ -55,7 +55,7 @@ using std::string;
 %type <path> path
 
 %type <instruction> instruction
-%type <command> command
+%type <instruction> command
 %type <instruction> variable
 %type <flow> flow
 %type <flow> block
@@ -108,7 +108,7 @@ Environment current_env;
 
 %%
 
-root : flow {$1->execute(current_env);}
+root : flow {$1->execute(current_env); delete $1;}
 ;
 
 instruction : command SEMICOLON {$$ = $1;}
@@ -223,21 +223,9 @@ command : DRAW_COMMAND path {
     $$ = c;
     // c->execute(*current_env);
 }
-/*
 | DRAW_COMMAND NAME {
-    Variable v = current_env->get_variable(string($2));
-
-    switch(v.type) {
-        case PATH:
-            Path p = *((Path*) v.value);
-            Command *c = new Command(DRAW, p);
-            break;
-
-        case IMAGE:
-            break;
-    }
+    $$ = new VariableCommand(DRAW, $2);
 }
-*/
 | FILL_COMMAND path {
     Command *c = new Command(FILL, *$2);
     delete $2;
@@ -266,6 +254,7 @@ variable: NAME EQ NAME {$$ = new VariableAffectation(string($1), SCALAR, new Con
 | NAME EQ spoint {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
 | NAME EQ path {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
 | NAME EQ image {$$ = new VariableAffectation(string($1), IMAGE_TYPE, $3);}
+| VAR NAME EQ image {$$ = new VariableInitialization(string($2), IMAGE_TYPE, $4);}
 ;
 
 block : LBRACE flow RBRACE {$$ = $2;}

@@ -2,9 +2,12 @@
 #include <string>
 #include <cassert>
 
+#include "flow.hpp"
+
 #include "command.hpp"
 
 using namespace std;
+
 
 cairo_surface_t *cairo_surface = NULL;
 cairo_t *cairo = NULL;
@@ -91,6 +94,37 @@ void Command::execute(Environment &env) {
 
         case FILL:
             cairo_fill(cairo);
+            break;
+    }
+}
+
+VariableCommand::VariableCommand(CommandName name, const string &var) {
+    _name = name;
+    _var = var;
+}
+
+VariableCommand::~VariableCommand() {
+    
+}
+
+/**
+ * Calls the command.
+ */
+void VariableCommand::execute(Environment &env) {
+    assert(cairo && cairo_surface);
+
+    Variable var = env.get_variable(_var);
+
+    switch(var.type) {
+        // case PATH:
+        //     Path *p = (Path*) var.value;
+        //     Command(_name, *p).execute(env);
+        //     break;
+
+        case IMAGE_TYPE:
+            Flow *f = (Flow*) var.value;
+            Environment child_env(&env);
+            f->execute(child_env);
             break;
     }
 }

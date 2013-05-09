@@ -2,11 +2,15 @@
 #define COMMAND_HPP
 
 #include <cstddef>
+#include <string>
 
 #include <cairo.h>
 
 #include "path.hpp"
 #include "instruction.hpp"
+
+using std::string;
+
 
 enum CommandName {
     DRAW,
@@ -30,6 +34,18 @@ public:
     Path get_path();
 
     virtual void print();
+    virtual void execute(Environment &env);
+};
+
+class VariableCommand : public Instruction {
+protected:
+    CommandName _name;
+    string _var;
+
+public:
+    VariableCommand(CommandName name, const string &var);
+    virtual ~VariableCommand();
+
     virtual void execute(Environment &env);
 };
 

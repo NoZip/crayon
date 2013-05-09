@@ -50,7 +50,7 @@ Variable Environment::get_variable(const string &name) {
       var = _parent->get_variable(name);
     }
     else {
-      throw VariableError(string("Not Defined"));
+      throw VariableError(name + string(" Not Defined"));
     }
   }
 
@@ -73,7 +73,7 @@ void Environment::set_variable(const string &name, VariableType type, void *valu
       _parent->set_variable(name, type, value);
     }
     else {
-      throw VariableError(string("Not Defined"));
+      throw VariableError(name + string(" Not Defined"));
     }
   }
 }
