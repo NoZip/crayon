@@ -3,13 +3,14 @@ var line = (0, test * 10) -- +(200, 0);
 var n = 50;
 var p = (150, 150);
 var img = image {
-	fill (50, 50) -- (150, 50) -- p -- (50, 150) -- cycle;
+	fill (50, 50) -- (150, 50) -- translate(p, (10, 0)) -- (50, 150) -- cycle;
 
 	var img = image {
-		draw (25, 25) -- +(150, 0) -- +(0, 150) -- +(-150, 0) -- cycle;
+		draw (25, 25) -- +(150, 0) -- +translate((0, 150), (10, 0)) -- +(-150, 0) -- cycle;
 	};
 
 	draw img;
 };
+draw (0,0) -- rotate((100,100), (0,0), 30);
 draw img;
 draw line;

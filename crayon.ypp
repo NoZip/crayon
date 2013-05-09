@@ -161,14 +161,12 @@ spoint : RPAR expression COMMA expression LPAR {
     $$ = new ConstantPointExpression(Point::from_polar($2, $4));
 }
 */
-/*
 | TRANSLATE_BUILDIN RPAR point COMMA point LPAR {
-  $$ = new Point($3->translate(*$5));
+  $$ = new BinaryPointExpression(EXPR_PLUS, $3, $5);
 }
-| ROTATE_BUILDIN RPAR point COMMA point COMMA REAL LPAR {
-  $$ = new Point($3->rotate(*$5,$7));
+| ROTATE_BUILDIN RPAR point COMMA point COMMA expression LPAR {
+  $$ = new RotatePointExpression($3, $5, $7);
 }
-*/
 ;
 
 path : path PATH_SEPARATOR point {
