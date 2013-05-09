@@ -11,6 +11,11 @@ using namespace std;
 //   return p;
 // }
 
+Point::Point(){
+  _x = NULL;
+  _y = NULL;
+}
+
 Point::Point(Expression *x, Expression *y) {
   _x = x;
   _y = y;
@@ -72,3 +77,35 @@ Expression* Point::get_y_expression() const {
 //   Point t(nx,ny);
 //   return t;
 // }
+
+Point Point::operator+(const Point p2){
+  Point p1 = *this;
+  p1._x = new BinaryExpression(EXPR_PLUS, p1.get_x_expression(), p2.get_x_expression());
+  p1._y = new BinaryExpression(EXPR_PLUS, p1.get_y_expression(), p2.get_y_expression());
+
+  return p1;
+}
+
+Point Point::operator-(const Point p2){
+  Point p1 = *this;
+  p1._x = new BinaryExpression(EXPR_MINUS, p1.get_x_expression(), p2.get_x_expression());
+  p1._y = new BinaryExpression(EXPR_MINUS, p1.get_y_expression(), p2.get_y_expression());
+
+  return p1;
+}
+
+Point Point::operator*(const Point p2){
+  Point p1 = *this;
+  p1._x = new BinaryExpression(EXPR_MUL, p1.get_x_expression(), p2.get_x_expression());
+  p1._y = new BinaryExpression(EXPR_MUL, p1.get_y_expression(), p2.get_y_expression());
+
+  return p1;
+}
+
+Point Point::operator/(const Point p2){
+  Point p1 = *this;
+  p1._x = new BinaryExpression(EXPR_DIV, p1.get_x_expression(), p2.get_x_expression());
+  p1._y = new BinaryExpression(EXPR_DIV, p1.get_y_expression(), p2.get_y_expression());
+
+  return p1;
+}

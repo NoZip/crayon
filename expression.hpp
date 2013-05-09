@@ -4,16 +4,9 @@
 #include <string>
 
 #include "environment.hpp"
+#include "utils.hpp"
 
 using std::string;
-
-enum ExpressionOperator {
-  EXPR_PLUS,
-  EXPR_MINUS,
-  EXPR_MUL,
-  EXPR_DIV,
-  EXPR_NEGATE
-};
 
 class Expression {
 public:

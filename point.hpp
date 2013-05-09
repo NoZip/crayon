@@ -11,7 +11,7 @@ using std::string;
 class Point {
  public:
   // static Point from_polar(float theta, float r);
-
+  Point();
   Point(Expression *x, Expression *y);
   
   float get_x(Environment &env) const;
@@ -24,6 +24,11 @@ class Point {
   
   // Point translate(Point v);
   // Point rotate(Point c, float angle);
+
+  Point operator+(const Point p2);
+  Point operator-(const Point p2);
+  Point operator*(const Point p2);
+  Point operator/(const Point p2);
 
  protected:
   Expression *_x;
