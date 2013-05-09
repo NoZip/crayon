@@ -1,7 +1,4 @@
 #include "for.hpp"
-#include "variable_affectation.hpp"
-#include "inequation.hpp"
-#include "flow.hpp"
 
 using namespace std;
 
@@ -10,6 +7,13 @@ For::For(Instruction *var1, Inequation *comp, Instruction *var2, Flow *flow){
   _comp = comp;
   _var2 = var2;
   _flow = flow;
+}
+
+For::~For() {
+  delete _var1;
+  delete _comp;
+  delete _var2;
+  delete _flow;
 }
 
 bool For::is_block() {

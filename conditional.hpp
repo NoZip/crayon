@@ -1,5 +1,5 @@
-#ifndef CONDITIONAL
-#define CONDITIONAL
+#ifndef _CONDITIONAL_
+#define _CONDITIONAL_
 
 #include "instruction.hpp"
 #include "inequation.hpp"
@@ -14,6 +14,8 @@ protected:
 public: 
   Conditional(Inequation *condition, Flow *consequent, Flow *alternative);
   virtual ~Conditional();
+
+  bool is_block();
   void execute(Environment &env);
 
 };

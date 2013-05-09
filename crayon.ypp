@@ -16,7 +16,8 @@
 #include "flow.hpp"
 
 #include "for.hpp"
-// #include "conditional.hpp"
+#include "while.hpp"
+#include "conditional.hpp"
 
 #define YYLEX_PARAM &yylval, &yylloc
 
@@ -59,7 +60,8 @@ using std::string;
 %type <flow> flow
 %type <flow> block
 %type <instruction> for
-// %type <conditional> conditional
+%type <instruction> while
+%type <instruction> conditional
 
 
 // Operators and separators
@@ -77,8 +79,8 @@ using std::string;
 %token LBRACE
 %token RBRACE
 %token FOR
-%token CONDITIONALIF
-%token CONDITIONALELSE
+%token IF
+%token ELSE
 %token WHILE
 
 %left PLUS MINUS
@@ -110,6 +112,8 @@ instruction : command SEMICOLON {$$ = $1;}
 | variable SEMICOLON {$$ = $1;}
 | block {$$ = $1;}
 | for {$$ = $1;}
+| while {$$ = $1;}
+| conditional {$$ = $1;}
 ;
 
 flow : flow instruction {$$ = $1; $$->append($2);}
@@ -265,6 +269,12 @@ block : LBRACE flow RBRACE {$$ = $2;}
 
 for : FOR RPAR variable SEMICOLON inequation SEMICOLON variable LPAR block {$$ = new For($3, $5, $7, $9);}
 
+while : WHILE RPAR inequation LPAR block {$$ = new While($3, $5);}
+
+conditional : IF RPAR inequation LPAR block ELSE block {$$ = new Conditional($3, $5, $7);}
+| IF RPAR inequation LPAR block {$$ = new Conditional($3, $5);}
+;
+
 /*
 image: IMG_START flow IMG_END
 ;
@@ -273,8 +283,6 @@ image: IMG_START flow IMG_END
 /*
 rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
 
-conditional : CONDITIONALIF RPAR inequation LPAR LBRACE flow RBRACE CONDITIONALELSE LBRACE flow RBRACE
-;
 */
 
 /*

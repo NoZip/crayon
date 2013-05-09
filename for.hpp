@@ -12,6 +12,7 @@ protected:
   Flow *_flow;
 public:
   For(Instruction *var1, Inequation *comp, Instruction *var2, Flow *flow);
+  ~For();
 
   bool is_block();
   void execute(Environment &env);

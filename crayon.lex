@@ -78,9 +78,10 @@ translate return TRANSLATE_BUILDIN;
 rotate return ROTATE_BUILDIN;
 
 for return FOR;
+while return WHILE;
 
-if return CONDITIONALIF;
-else return CONDITIONALELSE;
+if return IF;
+else return ELSE;
 
 [_a-zA-Z][_a-zA-Z0-9]* {
     yylval.name = strdup(yytext);
