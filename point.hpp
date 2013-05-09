@@ -18,7 +18,6 @@ class Point {
   float get_y() const;
   // float get_theta() const;
   // float get_r() const;
-  
   Point translate(Point v);
   Point rotate(Point c, float angle);
 

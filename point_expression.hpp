@@ -52,4 +52,15 @@ public:
   virtual Point calculate(Environment &env);
 };
 
+class RotatePointExpression : public PointExpression{
+protected:
+  PointExpression *_p1;
+  PointExpression *_p2;
+  Expression *_angle;
+
+public:
+  RotatePointExpression(PointExpression *p1, PointExpression *p2, Expression *_angle);
+  Point calculate(Environment &env);
+};
+
 #endif

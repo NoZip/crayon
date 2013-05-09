@@ -67,5 +67,15 @@ ConstantPointExpression::ConstantPointExpression(Expression *x, Expression*y) {
   }*/
 
 Point ConstantPointExpression::calculate(Environment &env) {
-	return Point(_x->calculate(env), _y->calculate(env));
+  return Point(_x->calculate(env), _y->calculate(env));
+}
+
+RotatePointExpression::RotatePointExpression(PointExpression *p1, PointExpression *p2, Expression *angle){
+  _p1 = p1;
+  _p2 = p2;
+  _angle = angle;
+}
+
+Point RotatePointExpression::calculate(Environment &env){
+  return (_p1->calculate(env)).rotate(_p2->calculate(env), _angle->calculate(env));
 }
