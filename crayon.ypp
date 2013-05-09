@@ -252,7 +252,8 @@ variable: NAME EQ NAME {$$ = new VariableAffectation(string($1), SCALAR, new Con
 | NAME EQ sexpression {$$ = new VariableAffectation(string($1), SCALAR, $3);}
 | NAME PLUS EQ sexpression {$$ = new VariableIncrement(string($1), EXPR_PLUS, $4);}
 | NAME EQ spoint {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
-| NAME EQ path {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
+| NAME EQ path {$$ = new VariableAffectation(string($1), PATH_TYPE, $3);}
+| VAR NAME EQ path {$$ = new VariableInitialization(string($2), PATH_TYPE, $4);}
 | NAME EQ image {$$ = new VariableAffectation(string($1), IMAGE_TYPE, $3);}
 | VAR NAME EQ image {$$ = new VariableInitialization(string($2), IMAGE_TYPE, $4);}
 ;

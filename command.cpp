@@ -116,15 +116,18 @@ void VariableCommand::execute(Environment &env) {
     Variable var = env.get_variable(_var);
 
     switch(var.type) {
-        // case PATH:
-        //     Path *p = (Path*) var.value;
-        //     Command(_name, *p).execute(env);
-        //     break;
+        case PATH_TYPE: {
+            Path *p = (Path*) var.value;
+            Command cmd = Command(_name, *p);
+            cmd.execute(env);
+            break;
+        }
 
-        case IMAGE_TYPE:
+        case IMAGE_TYPE: {
             Flow *f = (Flow*) var.value;
             Environment child_env(&env);
             f->execute(child_env);
-            break;
+            break;  
+        }
     }
 }

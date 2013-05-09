@@ -11,7 +11,7 @@ enum VariableType {
   SCALAR,
   BOOLEAN,
   VECTOR2D,
-  PATH,
+  PATH_TYPE,
   IMAGE_TYPE
 };
 
