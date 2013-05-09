@@ -19,8 +19,8 @@ class Point {
   // float get_theta() const;
   // float get_r() const;
   
-  // Point translate(Point v);
-  // Point rotate(Point c, float angle);
+  Point translate(Point v);
+  Point rotate(Point c, float angle);
 
   Point operator+(const Point &p2);
   Point operator-(const Point &p2);
