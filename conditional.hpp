@@ -12,7 +12,7 @@ protected:
   Flow *_alternative;
 
 public: 
-  Conditional(Inequation *condition, Flow *consequent, Flow *alternative);
+  Conditional(Inequation *condition, Flow *consequent, Flow *alternative=nullptr);
   virtual ~Conditional();
 
   bool is_block();

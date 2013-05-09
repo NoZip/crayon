@@ -7,7 +7,7 @@
 
 class Instruction {
 public:
-  ~Instruction() {}
+  virtual ~Instruction() {}
 
   virtual void print() {std::cout << "instruction" << std::endl;}
   virtual bool is_block() {return false;}

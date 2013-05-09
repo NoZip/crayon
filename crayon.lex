@@ -77,11 +77,15 @@ fill return FILL_COMMAND;
 translate return TRANSLATE_BUILDIN;
 rotate return ROTATE_BUILDIN;
 
+image return IMAGE;
+
 for return FOR;
 while return WHILE;
 
 if return IF;
 else return ELSE;
+
+var return VAR;
 
 [_a-zA-Z][_a-zA-Z0-9]* {
     yylval.name = strdup(yytext);

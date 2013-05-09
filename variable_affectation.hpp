@@ -10,13 +10,26 @@
 using std::string;
 
 
+class VariableInitialization : public Instruction {
+protected:
+  string _name;
+  Variable _value;
+
+public:
+  VariableInitialization(const string &name, VariableType type, void *value);
+  virtual ~VariableInitialization();
+
+  virtual void print();
+  virtual void execute(Environment &env);
+};
+
 class VariableAffectation : public Instruction {
 protected:
   string _name;
   Variable _value;
 
 public:
-  VariableAffectation(const string &name, VariableType type, Expression *value);
+  VariableAffectation(const string &name, VariableType type, void *value);
   virtual ~VariableAffectation();
 
   virtual void print();

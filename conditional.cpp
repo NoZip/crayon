@@ -1,6 +1,6 @@
 #include "conditional.hpp"
 
-Conditional::Conditional(Inequation *condition, Flow *consequent, Flow *alternative=nullptr){
+Conditional::Conditional(Inequation *condition, Flow *consequent, Flow *alternative){
   _condition = condition;
   _consequent = consequent;
   _alternative = alternative;

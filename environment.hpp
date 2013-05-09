@@ -12,7 +12,7 @@ enum VariableType {
   BOOLEAN,
   VECTOR2D,
   PATH,
-  IMAGE
+  IMAGE_TYPE
 };
 
 struct Variable {
@@ -31,9 +31,11 @@ public:
   virtual ~Environment();
 
   Environment* get_parent();
+
+  int deep();
   
   Variable get_variable(const string &name);
-  void set_variable(const string &name, VariableType type, void *value);
+  void set_variable(const string &name, VariableType type, void *value, bool initialization=false);
   void clear();
 };
 

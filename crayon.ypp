@@ -59,6 +59,7 @@ using std::string;
 %type <instruction> variable
 %type <flow> flow
 %type <flow> block
+%type <flow> image
 %type <instruction> for
 %type <instruction> while
 %type <instruction> conditional
@@ -78,6 +79,8 @@ using std::string;
 %token ROTATE_BUILDIN
 %token LBRACE
 %token RBRACE
+%token VAR
+%token IMAGE
 %token FOR
 %token IF
 %token ELSE
@@ -105,14 +108,15 @@ Environment current_env;
 
 %%
 
-image : flow {$1->execute(current_env);}
+root : flow {$1->execute(current_env);}
 ;
 
 instruction : command SEMICOLON {$$ = $1;}
 | variable SEMICOLON {$$ = $1;}
 | block {$$ = $1;}
+| image {$$ = $1;}
 | for {$$ = $1;}
-| while {$$ = $1;}
+// | while {$$ = $1;}
 | conditional {$$ = $1;}
 ;
 
@@ -223,21 +227,21 @@ command : DRAW_COMMAND path {
 | DRAW_COMMAND NAME {
     Variable v = current_env->get_variable(string($2));
 
-    if (v.type != PATH)
-        throw "MOTHERFUCKING ERROR!";
-    
-    Path p = *((Path*) v.value);
+    switch(v.type) {
+        case PATH:
+            Path p = *((Path*) v.value);
+            Command *c = new Command(DRAW, p);
+            break;
 
-    Command *c = new Command(DRAW, p);
-    $$ = c;
-    // c->execute(*current_env);
+        case IMAGE:
+            break;
+    }
 }
 */
 | FILL_COMMAND path {
     Command *c = new Command(FILL, *$2);
     delete $2;
     $$ = c;
-    // c->execute(*current_env);
 }
 /*
 | FILL_COMMAND NAME {
@@ -256,13 +260,12 @@ command : DRAW_COMMAND path {
 ;
 
 variable: NAME EQ NAME {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
+| VAR NAME EQ sexpression {$$ = new VariableInitialization(string($2), SCALAR, $4);}
 | NAME EQ sexpression {$$ = new VariableAffectation(string($1), SCALAR, $3);}
-| NAME PLUS EQ sexpression {
-    $$ = new VariableIncrement(string($1), EXPR_PLUS, $4);
-}
+| NAME PLUS EQ sexpression {$$ = new VariableIncrement(string($1), EXPR_PLUS, $4);}
 | NAME EQ spoint {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
 | NAME EQ path {$$ = new VariableAffectation(string($1), SCALAR, new ConstantExpression(0));}
-// | NAME EQ image
+| NAME EQ image {$$ = new VariableAffectation(string($1), IMAGE_TYPE, $3);}
 ;
 
 block : LBRACE flow RBRACE {$$ = $2;}
@@ -275,10 +278,8 @@ conditional : IF RPAR inequation LPAR block ELSE block {$$ = new Conditional($3,
 | IF RPAR inequation LPAR block {$$ = new Conditional($3, $5);}
 ;
 
-/*
-image: IMG_START flow IMG_END
+image: IMAGE block {$$ = $2;}
 ;
- */
 
 /*
 rotation : ROTATION RPAR REAL COMMA REAL COMMA REAL LPAR
