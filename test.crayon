@@ -1,16 +1,38 @@
-var test = 2*3 + 10;
-var line = (0, test * 10) -- +(200, 0);
-var n = 50;
-var p = (150, 150);
-var img = image {
-	fill (50, 50) -- (150, 50) -- translate(p, (10, 0)) -- (50, 150) -- cycle;
+var test = 10;
+var line = (10, test) -- ((1+9), test * 2) -- (0, test * 3) -- cycle;
 
-	var img = image {
-		draw (25, 25) -- +(150, 0) -- +translate((0, 150), (10, 0)) -- +(-150, 0) -- cycle;
-	};
+var n = line / 10;
+var p = (40, 0);
+var t = (180,180);
+var halfgrid = image {
+	for (var i = 0;i < 200; i+=10) {
+	   if (i > 100){
+		draw (i,0) -- +(0,(200+200)/2);
+		draw (0,i) -- +(200,0);
+	   }	
+	}
+};		
 
-	draw img;
+var ray = image {
+	for (var i = 0; i < 200; i+=30) {
+	    draw (0, 0) -- translate (p,(0,(i+10)/2));
+	}
 };
+
+var star = image {
+	fill ((50+50), 0) -- +(-20, 40) -- +(-40, 0) -- +(20, 20) -- +(-20, 30) -- +(60, -20) -- (160, 90) -- (140, 60) -- (160, 40) -- (120, 40);
+	
+};
+
+var rota = image {
+	for (var i = 0;i <= 380; i+=90) {
+		draw t -- rotate((0,200),(0,0), i);
+		
+	}
+};
+
 draw (0,0) -- rotate((100,100), (0,0), 30);
-draw img;
-draw line;
+draw star;
+draw rota;
+draw ray;
+draw halfgrid;
