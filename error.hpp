@@ -7,6 +7,8 @@
 
 using std::string;
 
+//classe d'erreur pour récuperer et
+//traiter les exceptions
 class VariableError : public std::exception {
 protected:
 	string _message;

@@ -8,6 +8,10 @@
 
 using std::string;
 
+//Une expression represente un noeud de
+//l'arbre syntaxique des operations
+//mathematiques. Calculer l'expression
+//permet de récuperer sa valeur
 class Expression {
 public:
   virtual ~Expression();
@@ -15,6 +19,7 @@ public:
   virtual float calculate(Environment &env) = 0;
 };
 
+//Une valeur constante d'une expression
 class ConstantExpression : public Expression {
 protected:
   float _value;
@@ -26,10 +31,12 @@ public:
   virtual float calculate(Environment &env);
 };
 
+//Classe qui permet de calculer une variable
+//contenant une expression (et donc de l'extraire
+//directement)
 class VariableExpression : public Expression {
 protected:
   string _name;
-
 public:
   VariableExpression(const string &name);
   virtual ~VariableExpression();
@@ -37,6 +44,7 @@ public:
   virtual float calculate(Environment &env);
 };
 
+//Une operation sur un element (ex: -3)
 class UnaryExpression : public Expression {
 protected:
   ExpressionOperator _op;
@@ -49,6 +57,7 @@ public:
   virtual float calculate(Environment &env);
 };
 
+//Une operation sur deux elements (ex: 1+1)
 class BinaryExpression : public Expression {
 protected:
   ExpressionOperator _op;

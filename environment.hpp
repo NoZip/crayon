@@ -20,6 +20,8 @@ struct Variable {
   void *value;
 };
 
+//Contient les variables du contexte actuel
+//et l'environment parent pour pouvoir remonter
 class Environment {
 protected:
   Environment *_parent;
@@ -32,7 +34,7 @@ public:
 
   Environment* get_parent();
 
-  int deep();
+  int deep(); //profondeur de l'arbre (pour debug)
   
   Variable get_variable(const string &name);
   void set_variable(const string &name, VariableType type, void *value, bool initialization=false);

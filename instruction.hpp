@@ -5,6 +5,8 @@
 
 #include "environment.hpp"
 
+//classe qui caracterise un instruction
+//permet d'executer execute sur n'importe quel type d'instruction
 class Instruction {
 public:
   virtual ~Instruction() {}

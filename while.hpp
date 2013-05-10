@@ -5,6 +5,7 @@
 #include "inequation.hpp"
 #include "flow.hpp"
 
+//classe qui caracterise la boucle while
 class While: public Instruction{
 protected:
   Inequation *_comp;

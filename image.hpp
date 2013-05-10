@@ -4,6 +4,9 @@
 #include "environment.hpp"
 #include "flow.hpp"
 
+//Classe qui représente une image, c'est
+//à dire l'ensemble des instructions et des variables
+//qui la composent, donc son flow et son environnement
 class Image{
 protected:
   Flow *_flow;

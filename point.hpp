@@ -8,6 +8,9 @@
 
 using std::string;
 
+//classe qui caracterise un point
+//contient ses coordonnées, des accesseurs et des
+//surcharges d'operateurs
 class Point {
  public:
   // static Point from_polar(Expression *theta, Expression *r);

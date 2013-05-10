@@ -17,6 +17,8 @@ enum CommandName {
     FILL
 };
 
+//Classe qui caracterise une commande
+//et execute les fonctions de dessin
 class Command : public Instruction {
 protected:
     CommandName _name;
@@ -37,6 +39,8 @@ public:
     virtual void execute(Environment &env);
 };
 
+//Classe qui permet l'execution d'une
+//variable contenant une commande
 class VariableCommand : public Instruction {
 protected:
     CommandName _name;

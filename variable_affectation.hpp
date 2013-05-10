@@ -9,7 +9,7 @@
 
 using std::string;
 
-
+//classe qui permet d'initialiser une variable
 class VariableInitialization : public Instruction {
 protected:
   string _name;
@@ -23,6 +23,7 @@ public:
   virtual void execute(Environment &env);
 };
 
+//classe qui permet de changer la valeur d'une variable
 class VariableAffectation : public Instruction {
 protected:
   string _name;
@@ -36,6 +37,7 @@ public:
   virtual void execute(Environment &env);
 };
 
+//incrementation d'une variable
 class VariableIncrement : public Instruction {
 protected:
 	string _name;

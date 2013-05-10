@@ -7,6 +7,7 @@
 
 using std::list;
 
+//Classe contenant un ensemble d'instructions
 class Flow : public Instruction {
 public:
   Flow();

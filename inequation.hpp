@@ -20,6 +20,7 @@ enum InequationOperator {
   INEQ_NOT
 };
 
+//classe permettant de calculer les inequations
 class Inequation {
 public:
   virtual ~Inequation();
@@ -38,6 +39,8 @@ public:
   virtual bool calculate(Environment &env);
 };
 
+//**Au cas ou on veuille mettre des variables bool**//
+//
 // class VariableInequation : public Inequation {
 // protected:
 //   Environment *_env;
@@ -50,6 +53,7 @@ public:
 //   virtual bool calculate(Environment &env);
 // };
 
+//Inequation unaire, par exemple "!variable"
 class UnaryInequation : public Inequation {
 protected:
   InequationOperator _op;
@@ -62,6 +66,7 @@ public:
   virtual bool calculate(Environment &env);
 };
 
+//Inequation binaire, par exemple "var1 < var2"
 class BinaryInequation : public Inequation {
 protected:
   InequationOperator _op;
@@ -75,6 +80,8 @@ public:
   virtual bool calculate(Environment &env);
 };
 
+//Pour composer des inequations avec && et ||
+//exemple "var1 < var2 && var3 < var4"
 class CompositeInequation : public Inequation {
 protected:
   InequationOperator _op;

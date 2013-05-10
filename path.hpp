@@ -9,6 +9,8 @@
 using std::list;
 using std::string;
 
+//classe qui caracterise un chemin
+//c'est a dire un ensemble de points
 class Path : public list<PointExpression*> {
  public:
   // Path(std::initializing_list<Point> l);
